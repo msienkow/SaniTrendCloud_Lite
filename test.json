@@ -1,0 +1,56 @@
+{
+    "rows": [
+        {
+            "name": "entry1",
+            "time": 1637360360760,
+            "value": {
+                "value": 123,
+                "baseType": "NUMBER"
+            },
+            "quality": "GOOD"
+        },
+        {
+            "name": "entry2",
+            "time": 1637360360760,
+            "value": {
+                "value": 456,
+                "baseType": "NUMBER"
+            },
+            "quality": "GOOD"
+        }
+    ],
+    "dataShape": {
+        "fieldDefinitions": {
+            "name": {
+                "name": "name",
+                "aspects": {
+                    "isPrimaryKey": true
+                },
+                "description": "Property name",
+                "baseType": "STRING",
+                "ordinal": 0
+            },
+            "time": {
+                "name": "time",
+                "aspects": {},
+                "description": "time",
+                "baseType": "DATETIME",
+                "ordinal": 0
+            },
+            "value": {
+                "name": "value",
+                "aspects": {},
+                "description": "value",
+                "baseType": "VARIANT",
+                "ordinal": 0
+            },
+            "quality": {
+                "name": "quality",
+                "aspects": {},
+                "description": "quality",
+                "baseType": "STRING",
+                "ordinal": 0
+            }
+        }
+    }
+}
