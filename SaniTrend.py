@@ -24,8 +24,8 @@ def main():
             if PLC.connected:
                 # Read PLC tags
                 tagData = PLC.read(*SaniTrend.Tags)
-
-                print(f'Connection Status = {SaniTrend.isConnected}')
+                inches = SaniTrend.GetTagValue(TagData=tagData, TagName='Inches')
+                print(f'Connection Status = {SaniTrend.isConnected} inches value = {inches}')
  
                 # Reset PLC error count if everything succeeded
                 PLCErrorCount = 0
