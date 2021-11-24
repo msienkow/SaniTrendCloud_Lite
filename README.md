@@ -17,3 +17,10 @@ $ python -m pip install pycomm3
 ```console
 $ python -m pip install requests
 ```
+
+
+- [Reqeusts](https://github.com/psf/requests) - For REST API calls to Thingworx.
+
+```console
+$ python -m pip install requests
+```
