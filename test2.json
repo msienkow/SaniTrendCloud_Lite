@@ -1,46 +1,24 @@
-[
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T11: 39: 16.186882Z', 'fields': {'Volts': 2.1098902225494385
-        }
+{
+    "Config": {
+        "PLCIPAddress": "10.10.135.173",
+        "SMINumber": "test.thing.123"
     },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T11: 39: 21.289806Z', 'fields': {'Volts': 2.1123321056365967
+    "Tags": [
+        {
+            "tag": "Inches",
+            "twtype": "NUMBER"
+        },
+        {
+            "tag": "Volts",
+            "twtype": "NUMBER"
+        },
+        {
+            "tag": "Test_Analog_Real",
+            "twtype": "NUMBER"
+        },
+        {
+            "tag": "_IO_EM_AI_01",
+            "twtype": "NUMBER"
         }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T11: 47: 28.066211Z', 'fields': {'Volts': 2.1123321056365967
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T11: 47: 33.144274Z', 'fields': {'Volts': 2.1098902225494385
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T11: 51: 27.174602Z', 'fields': {'Volts': 2.1098902225494385
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T11: 51: 32.256929Z', 'fields': {'Volts': 2.1123321056365967
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T11: 51: 37.326085Z', 'fields': {'Volts': 2.1098902225494385
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T12: 27: 28.847801Z', 'fields': {'Volts': 2.1098902225494385
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T12: 28: 56.500543Z', 'fields': {'Volts': 2.114774227142334
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T12: 29: 01.595103Z', 'fields': {'Volts': 2.1123321056365967
-        }
-    },
-    {'measurement': 'data', 'tags': {'SentToTwx': True
-        }, 'time': '2021-11-29T12: 29: 27.203976Z', 'fields': {'Volts': 2.105006217956543
-        }
-    }
-]
+    ]
+}

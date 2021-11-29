@@ -17,6 +17,7 @@ class Config:
     def __init__(self, *, ConfigFile=''):
         self.PLCIPAddress = ''
         self.Tags = []
+        self.TagData = []
         self.TagTable = []
         self.ServerURL = ''
         self.SMINumber = ''
@@ -51,8 +52,8 @@ class Config:
         return self._configData
 
     # Get specific tag value from globally returned tag list from PLC through pycomm3
-    def GetTagValue(self, *, TagData=[], TagName=''):
-        if TagData and TagName:
+    def GetTagValue(self, *, TagName=''):
+        if self.TagData and TagName:
             result = [item.value for item in TagData if item[0] == TagName]
             return result[0]
         else:
@@ -117,3 +118,15 @@ class Config:
         with open(writePath, mode) as f:
             f.write(f'{currentDateTime},{name},{error}\n')
             print(f'{currentDateTime},{name},{error}\n')
+
+    # # Wrapper function to call influx db data logging in a thread
+    # def LogSaniTrendData(TagData, TagTable):
+    #     threading.Thread(target=_LogSaniTrendData).start()
+    
+
+    # # Influx DB Data Logging
+    # def _LogSaniTrendData(self,):
+    #     with InfluxDBClient('localhost', 8086, 'sanitrend', 'Tunn3lwa5h', 'sanitrend') as client:
+    #         client.switch_database('sanitrend')
+    #         for tagname,twtype in self.TagTable:
+    #             value = [item.value for item in self.TagData if item[0] == tagname]
