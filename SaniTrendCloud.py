@@ -54,7 +54,7 @@ class Config:
     # Get specific tag value from globally returned tag list from PLC through pycomm3
     def GetTagValue(self, *, TagName=''):
         if self.TagData and TagName:
-            result = [item.value for item in TagData if item[0] == TagName]
+            result = [item.value for item in self.TagData if item[0] == TagName]
             return result[0]
         else:
             return None
