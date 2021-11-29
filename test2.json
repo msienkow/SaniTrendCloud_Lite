@@ -1,0 +1,24 @@
+{
+    "Config": {
+        "PLCIPAddress": "10.10.135.173",
+        "SMINumber": "test.thing.123"
+    },
+    "Tags": [
+        {
+            "tag": "inches",
+            "twtype": "NUMBER"
+        },
+        {
+            "tag": "Volts",
+            "twtype": "NUMBER"
+        },
+        {
+            "tag": "Test_Analog_Real",
+            "twtype": "NUMBER"
+        },
+        {
+            "tag": "_IO_EM_AI_01",
+            "twtype": "NUMBER"
+        }
+    ]
+}
