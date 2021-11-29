@@ -4,6 +4,8 @@ import os
 from datetime import datetime
 from pycomm3 import LogixDriver
 from pycomm3.exceptions import CommError
+from influxdb import InfluxDBClient
+
     
 def main():
 
