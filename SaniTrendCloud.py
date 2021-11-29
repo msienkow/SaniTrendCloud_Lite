@@ -16,6 +16,7 @@ class Config:
     def __init__(self, *, ConfigFile=''):
         self.PLCIPAddress = ''
         self.Tags = []
+        self.TagTable = []
         self.ServerURL = ''
         self.SMINumber = ''
         self.ConnectionStatusTime= 10
@@ -39,7 +40,13 @@ class Config:
             self.PLCIPAddress = self._configData['Config']['PLCIPAddress']            
             self.SMINumber = self._configData['Config']['SMINumber']
             self.ServerURL = f'http://localhost:8000/Thingworx/{self.SMINumber}/'
-            self.Tags = self._configData['Tags']
+            # self.Tags = self._configData['Tags']
+            self.TagTable = self._configData['Tags']
+            for dict in self.TagTable:
+                for x,y in dict.items():
+                    if x == 'tag':
+                        self.Tags.append(y)
+
         return self._configData
 
     # Get specific tag value from globally returned tag list from PLC through pycomm3
