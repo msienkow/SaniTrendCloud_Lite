@@ -7,8 +7,6 @@ from datetime import datetime
 from requests.models import HTTPError
 import requests
 import os
-from ftplib import FTP
-import shutil
 from influxdb import InfluxDBClient
 
 # Overall Configuration Class to import that has
