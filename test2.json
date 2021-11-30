@@ -1,7 +1,11 @@
 {
     "Config": {
         "PLCIPAddress": "10.10.135.173",
-        "SMINumber": "test.thing.123"
+        "SMINumber": "test.thing.123",
+        "InfluxDB" : "sanitrend",
+        "InfluxPort" : "8086",
+        "InfluxUser" : "sanimatic",
+        "InfluxPW" : "Tunn3lWa5h"
     },
     "Tags": [
         {

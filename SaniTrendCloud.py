@@ -28,6 +28,11 @@ class Config:
         self._ConnectionStatusSession = requests.Session()
         self._OS = platform.system()
         self.LoadConfig(ConfigFile=ConfigFile)
+        self._InfluxDB = ""
+        self._InfluxPort = 0
+        self._InfluxUser = ""
+        self._InfluxPW = ""
+        self.InfluxClient = {}
         self._HttpHeaders = {
             'Connection': 'keep-alive',
             'Accept': 'application/json',
@@ -42,7 +47,13 @@ class Config:
             self.PLCIPAddress = self._configData['Config']['PLCIPAddress']
             self.SMINumber = self._configData['Config']['SMINumber']
             self.ServerURL = f'http://localhost:8000/Thingworx/{self.SMINumber}/'
-            # self.Tags = self._configData['Tags']
+            self._InfluxDB = self._configData['Config']['InfluxDB']
+            self._InfluxPort = int(self._configData['Config']['InfluxPort'])
+            self._InfluxUser = self._configData['Config']['InfluxUser']
+            self._InfluxPW = self._configData['Config']['InfluxPW']
+            
+            self.InfluxClient = InfluxDBClient('localhost', self._InfluxPort, self._InfluxUser, self._InfluxPW, self._InfluxDB)
+            self.InfluxClient.switch_database(self._InfluxDB)
             self.TagTable = self._configData['Tags']
             for dict in self.TagTable:
                 for x,y in dict.items():
