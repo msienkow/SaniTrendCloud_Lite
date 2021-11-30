@@ -135,6 +135,7 @@ class Config:
         if elapsed_time > self._Influx_Write_Timer:
             self._Influx_Last_Write = time.perf_counter()
             self.InfluxClient.write_points(self._Influx_Log_Buffer)
+            print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
             self._Influx_Log_Buffer = []
 
 
