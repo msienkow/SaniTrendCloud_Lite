@@ -28,6 +28,9 @@ class Config:
         self._ConnectionStatusSession = requests.Session()
         self._OS = platform.system()
         self.LoadConfig(ConfigFile=ConfigFile)
+        self._Influx_Last_Write = time.perf_counter()
+        self._Influx_Write_Timer = 5
+        self._Influx_Log_Buffer = []
         self._InfluxDB = ""
         self._InfluxPort = 0
         self._InfluxUser = ""
@@ -56,11 +59,9 @@ class Config:
             self.InfluxClient.switch_database(self._InfluxDB)
             self.TagTable = self._configData['Tags']
             for dict in self.TagTable:
-                for x,y in dict.items():
-                    if x == 'tag':
-                        self.Tags.append(y)
+                self.Tags.append(dict['tag'])
 
-        return self._configData
+        return self
 
     # Get specific tag value from globally returned tag list from PLC through pycomm3
     def GetTagValue(self, *, TagName=''):
@@ -106,6 +107,35 @@ class Config:
         self._ConnectionStatusRunning = False
 
 
+    # Wrapper function to call influx db data logging in a thread
+    def LogData(self,):
+        threading.Thread(target=self._LogData).start()
+    
+    # Influx DB Data Logging
+    def _LogData(self,):
+        fields = {}
+        data = {
+            "measurement": "data",
+            "tags" : {},
+            "time" : datetime.now(),
+            "fields" : {}
+        }
+
+        for dict in self.TagTable:
+            tag = dict['tag']
+            tagValue = self.GetTagValue(TagName=tag)
+            value = round(tagValue, 2) if isinstance(tagValue, float) else tagValue
+            fields[tag] = value
+
+        data['fields'] = fields
+        self._Influx_Log_Buffer.append(data)
+
+        elapsed_time = time.perf_counter() - self._Influx_Last_Write
+        if elapsed_time > self._Influx_Write_Timer:
+            self.InfluxClient.write_points(self._Influx_Log_Buffer)
+            self._Influx_Log_Buffer = []
+
+
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'../ErrorLogs'
         currentDateTime = datetime.now()
@@ -129,15 +159,3 @@ class Config:
         with open(writePath, mode) as f:
             f.write(f'{currentDateTime},{name},{error}\n')
             print(f'{currentDateTime},{name},{error}\n')
-
-    # # Wrapper function to call influx db data logging in a thread
-    # def LogSaniTrendData(TagData, TagTable):
-    #     threading.Thread(target=_LogSaniTrendData).start()
-    
-
-    # # Influx DB Data Logging
-    # def _LogSaniTrendData(self,):
-    #     with InfluxDBClient('localhost', 8086, 'sanitrend', 'Tunn3lwa5h', 'sanitrend') as client:
-    #         client.switch_database('sanitrend')
-    #         for tagname,twtype in self.TagTable:
-    #             value = [item.value for item in self.TagData if item[0] == tagname]
