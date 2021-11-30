@@ -127,6 +127,7 @@ class Config:
             tagValue = self.GetTagValue(TagName=tag)
             value = round(tagValue, 2) if isinstance(tagValue, float) else tagValue
             fields[tag] = value
+        fields['SentToTwx'] = False
 
         data['fields'] = fields
         self._Influx_Log_Buffer.append(data)
