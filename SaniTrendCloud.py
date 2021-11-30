@@ -27,7 +27,6 @@ class Config:
         self._LastStatusUpdate = 0
         self._ConnectionStatusSession = requests.Session()
         self._OS = platform.system()
-        self.LoadConfig(ConfigFile=ConfigFile)
         self._Influx_Last_Write = time.perf_counter()
         self._Influx_Write_Timer = 5
         self._Influx_Log_Buffer = []
@@ -41,6 +40,8 @@ class Config:
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
+        self.LoadConfig(ConfigFile=ConfigFile)
+
 
 
     # Read in configuration file and set values on object
@@ -132,6 +133,7 @@ class Config:
 
         elapsed_time = time.perf_counter() - self._Influx_Last_Write
         if elapsed_time > self._Influx_Write_Timer:
+            self._Influx_Last_Write = time.perf_counter()
             self.InfluxClient.write_points(self._Influx_Log_Buffer)
             self._Influx_Log_Buffer = []
 
