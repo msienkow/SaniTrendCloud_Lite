@@ -216,23 +216,23 @@ class Config:
                     data['fields'] = fields
                     json_payload.append(data)
 
-            values['rows'] = rows
-            values['dataShape'] = dataShape
+                values['rows'] = rows
+                values['dataShape'] = dataShape
 
-            try:
-                thingworx_json = {
-                    'values' : values
-                }
-                print(thingworx_json)
-                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
-                if serviceResult.status_code == 200:
-                    self.InfluxClient.write_points(json_payload)
-                else:
-                    self.LogErrorToFile('_SendToTwx', serviceResult)
+                try:
+                    thingworx_json = {
+                        'values' : values
+                    }
+                    print(thingworx_json)
+                    serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
+                    if serviceResult.status_code == 200:
+                        self.InfluxClient.write_points(json_payload)
+                    else:
+                        self.LogErrorToFile('_SendToTwx', serviceResult)
 
-            except Exception as e:
-                self.isConnected = False
-                self.LogErrorToFile('_SendToTwx', e)  
+                except Exception as e:
+                    self.isConnected = False
+                    self.LogErrorToFile('_SendToTwx', e)  
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'../ErrorLogs'
