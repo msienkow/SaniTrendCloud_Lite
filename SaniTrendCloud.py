@@ -207,8 +207,8 @@ class Config:
                             fields[key] = value
                             twxvalue['name'] = fields[key]
                             twxvalue['value'] = value
-                            twtypes = (item['twtype'] for item in self.TagTable if item['tag'] == key)
-                            for i in twtypes:
+                            twxtypes = (item['twxtype'] for item in self.TagTable if item['tag'] == key)
+                            for i in twxtypes:
                                 twxvalue['baseType'] = i
                             rows.append(twxvalue)
                         elif key == 'SentToTwx':
