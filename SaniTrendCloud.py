@@ -223,7 +223,7 @@ class Config:
                     thingworx_json = {
                         'values' : values
                     }
-                    print(thingworx_json)
+                    self.LogErrorToFile('thingworx', thingworx_json)
                     serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
                     if serviceResult.status_code == 200:
                         self.InfluxClient.write_points(json_payload)
