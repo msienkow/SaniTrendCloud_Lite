@@ -34,8 +34,8 @@ class Config:
         self._InfluxUser = ""
         self._InfluxPW = ""
         self.InfluxClient = {}
-        self.InfluxTimerSP  = 1
-        self.TwxTimerSP = 2
+        self._InfluxTimerSP  = 1
+        self._TwxTimerSP = 2
         self._Twx_Last_Write = time.perf_counter()
         self._HttpHeaders = {
             'Connection': 'keep-alive',
@@ -139,14 +139,14 @@ class Config:
         self._Influx_Log_Buffer.append(data)
 
         influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
-        if influx_elapsed_time > self.InfluxTimerSP: 
+        if influx_elapsed_time > self._InfluxTimerSP: 
             self._Influx_Last_Write = time.perf_counter() 
             self.InfluxClient.write_points(self._Influx_Log_Buffer)
             # print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
             self._Influx_Log_Buffer = []
 
         twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
-        if twx_elapsed_time > self.TwxTimerSP:
+        if twx_elapsed_time > self._TwxTimerSP:
             threading.Thread(target=self._SendToTwx).start()
             self._Twx_Last_Write = time.perf_counter()
 
