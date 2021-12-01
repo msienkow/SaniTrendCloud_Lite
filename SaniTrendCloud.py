@@ -116,7 +116,6 @@ class Config:
 
     # Wrapper function to call influx db data logging in a thread
     def LogData(self,):
-        self._Influx_Last_Write = time.perf_counter()
         threading.Thread(target=self._LogData).start()
     
     # Influx DB Data Logging
@@ -140,7 +139,8 @@ class Config:
         self._Influx_Log_Buffer.append(data)
 
         influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
-        if influx_elapsed_time > self.InfluxTimerSP:  
+        if influx_elapsed_time > self.InfluxTimerSP: 
+            self._Influx_Last_Write = time.perf_counter() 
             self.InfluxClient.write_points(self._Influx_Log_Buffer)
             # print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
             self._Influx_Log_Buffer = []
