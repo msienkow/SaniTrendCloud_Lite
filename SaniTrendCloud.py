@@ -205,11 +205,14 @@ class Config:
                         twxvalue['quality'] = 'GOOD'
                         if key != 'time' and key != 'SentToTwx':
                             fields[key] = value
-                            twxvalue['name'] = fields[key]
-                            twxvalue['value']['value'] = value
+                            twxvalue['name'] = key
                             twxtypes = (item['twxtype'] for item in self.TagTable if item['tag'] == key)
                             for i in twxtypes:
-                                twxvalue['value']['baseType'] = i
+                                baseType = i
+                            twxvalue['value'] = {
+                                'value' : value,
+                                'baseType' : baseType
+                            }
                             rows.append(twxvalue)
                         elif key == 'SentToTwx':
                             fields[key] = True
