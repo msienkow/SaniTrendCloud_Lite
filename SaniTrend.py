@@ -33,7 +33,7 @@ def main():
             # results = list(result)
             # results = []
             # print(results)
-            time.sleep(0.5)
+            time.sleep(SaniTrend.PLCScanRate * 0.001)
             # json_payload2 = []
 
             # for row in results:

@@ -7,13 +7,14 @@ from datetime import datetime
 from requests.models import HTTPError
 import requests
 import os
-from influxdb import InfluxDBClient
+from influxdb import InfluxDBClient, resultset
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud
 class Config:
     def __init__(self, *, ConfigFile=''):
         self.PLCIPAddress = ''
+        self.PLCScanRate = 1000
         self.Tags = []
         self.TagData = []
         self.TagTable = []
@@ -24,15 +25,18 @@ class Config:
         self._ConnectionStatusRunning = False
         self._LastStatusUpdate = 0
         self._ConnectionStatusSession = requests.Session()
+        self._ThingworxSession = requests.Session()
         self._OS = platform.system()
-        self._Influx_Last_Write = time.perf_counter()
-        self._Influx_Write_Timer = 5
+        self._Influx_Last_Write = time.perf_counter()  
         self._Influx_Log_Buffer = []
         self._InfluxDB = ""
         self._InfluxPort = 0
         self._InfluxUser = ""
         self._InfluxPW = ""
         self.InfluxClient = {}
+        self.InfluxTimerSP  = 1
+        self.TwxTimerSP = 2
+        self._Twx_Last_Write = time.perf_counter()
         self._HttpHeaders = {
             'Connection': 'keep-alive',
             'Accept': 'application/json',
@@ -47,12 +51,15 @@ class Config:
         with open(ConfigFile) as file:
             self._configData = json.load(file)
             self.PLCIPAddress = self._configData['Config']['PLCIPAddress']
+            self.PLCScanRate = int(self._configData['Config']['PLCScanRate'])
             self.SMINumber = self._configData['Config']['SMINumber']
             self.ServerURL = f'http://localhost:8000/Thingworx/{self.SMINumber}/'
             self._InfluxDB = self._configData['Config']['InfluxDB']
             self._InfluxPort = int(self._configData['Config']['InfluxPort'])
             self._InfluxUser = self._configData['Config']['InfluxUser']
             self._InfluxPW = self._configData['Config']['InfluxPW']
+            self._InfluxTimerSP  = int(self._configData['Config']['InfluxTimerSP']) * 0.001
+            self._TwxTimerSP = int(self._configData['Config']['TwxTimerSP']) * 0.001
             
             self.InfluxClient = InfluxDBClient('localhost', self._InfluxPort, self._InfluxUser, self._InfluxPW, self._InfluxDB)
             self.InfluxClient.switch_database(self._InfluxDB)
@@ -65,8 +72,9 @@ class Config:
     # Get specific tag value from globally returned tag list from PLC through pycomm3
     def GetTagValue(self, *, TagName=''):
         if self.TagData and TagName:
-            result = [item.value for item in self.TagData if item[0] == TagName]
-            return result[0]
+            values = (item.value for item in self.TagData if item[0] == TagName)
+            for i in values:
+                return i
         else:
             return None
 
@@ -130,13 +138,100 @@ class Config:
         data['fields'] = fields
         self._Influx_Log_Buffer.append(data)
 
-        elapsed_time = time.perf_counter() - self._Influx_Last_Write
-        if elapsed_time > self._Influx_Write_Timer:
+        influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
+        if influx_elapsed_time > self.InfluxTimerSP:
             self._Influx_Last_Write = time.perf_counter()
             self.InfluxClient.write_points(self._Influx_Log_Buffer)
             print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
             self._Influx_Log_Buffer = []
 
+        twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
+        if twx_elapsed_time > self.TwxTimerSP:
+            threading.Thread(target=self._SendToTwx).start()
+            self._Twx_Last_Write = time.perf_counter()
+
+    # Query Influx database and send unsent data to Thingworx
+    def _SendToTwx(self,):
+        json_payload = []
+        query = self.InfluxClient.query('select * from data where SentToTwx = false')
+
+        if query:
+            url = f'{self.ServerURL}Services/UpdatePropertyValues'
+            values = {}
+            rows = []
+            dataShape = {
+                'fieldDefinitions' : {
+                    'name' : {
+                        'name' : 'name',
+                        'aspects' : {
+                            'isPrimaryKey' : True
+                        },
+                    'description' : 'Property name',
+                    'baseType': 'STRING',
+                    'ordinal' : 0
+                    },
+                    'time' : {
+                        'name' : 'time',
+                        'aspects' : {},
+                        'description' : 'time',
+                        'baseType' : 'DATETIME',
+                        'ordinal' : 0
+                    },
+                    'value' : {
+                        'name' : 'value',
+                        'aspects' : {},
+                        'description' : 'value',
+                        'baseType' : 'VARIANT',
+                        'ordinal' : 0
+                    }
+                }
+            }
+
+            for row in query:
+                for dict in row:
+                    timestamp = dict['time'] 
+                    data = {
+                        "measurement" : "data",
+                        "tags" : {},
+                        "time" : timestamp,
+                        "fields" : {}
+                    }
+
+                    fields = {}
+                    twx_data = {}
+                    for key,value in dict.items():
+                        twxvalue = {}
+                        twxvalue['time'] = timestamp
+                        twxvalue['quality'] = 'GOOD'
+                        if key != 'time' and key != 'SentToTwx':
+                            fields[key] = value
+                            twxvalue['name'] = fields[key]
+                            twxvalue['value'] = value
+                            twtypes = (item['twtype'] for item in self.TagTable if item['tag'] == key)
+                            for i in twtypes:
+                                twxvalue['baseType'] = i
+                            rows.append(twxvalue)
+                        elif key == 'SentToTwx':
+                            fields[key] = True
+                    data['fields'] = fields
+                    json_payload.append(data)
+
+            values['rows'] = rows
+            value['dataShape'] = dataShape
+
+            try:
+                thingworx_json = {
+                    'values' : values
+                }
+                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, timeout=5)
+                if serviceResult.status_code == 200:
+                    self.InfluxClient.write_points(json_payload)
+                else:
+                    self.LogErrorToFile('_SendToTwx', serviceResult)
+
+            except Exception as e:
+                self.isConnected = False
+                self.LogErrorToFile('_SendToTwx', e)  
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'../ErrorLogs'
