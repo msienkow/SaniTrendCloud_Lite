@@ -116,6 +116,7 @@ class Config:
 
     # Wrapper function to call influx db data logging in a thread
     def LogData(self,):
+        self._Influx_Last_Write = time.perf_counter()
         threading.Thread(target=self._LogData).start()
     
     # Influx DB Data Logging
@@ -139,10 +140,9 @@ class Config:
         self._Influx_Log_Buffer.append(data)
 
         influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
-        if influx_elapsed_time > self.InfluxTimerSP:
-            self._Influx_Last_Write = time.perf_counter()
+        if influx_elapsed_time > self.InfluxTimerSP:  
             self.InfluxClient.write_points(self._Influx_Log_Buffer)
-            print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
+            # print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
             self._Influx_Log_Buffer = []
 
         twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
@@ -229,20 +229,20 @@ class Config:
                 values['rows'] = rows
                 values['dataShape'] = dataShape
 
-                try:
-                    thingworx_json = {
-                        'values' : values
-                    }
-                    self.LogErrorToFile('thingworx', thingworx_json)
-                    serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
-                    if serviceResult.status_code == 200:
-                        self.InfluxClient.write_points(json_payload)
-                    else:
-                        self.LogErrorToFile('_SendToTwx', serviceResult)
+            try:
+                thingworx_json = {
+                    'values' : values
+                }
+                self.LogErrorToFile('thingworx', json.dumps(thingworx_json))
+                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
+                if serviceResult.status_code == 200:
+                    self.InfluxClient.write_points(json_payload)
+                else:
+                    self.LogErrorToFile('_SendToTwx', serviceResult)
 
-                except Exception as e:
-                    self.isConnected = False
-                    self.LogErrorToFile('_SendToTwx', e)  
+            except Exception as e:
+                self.isConnected = False
+                self.LogErrorToFile('_SendToTwx', e)  
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'../ErrorLogs'
