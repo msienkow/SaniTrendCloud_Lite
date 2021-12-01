@@ -160,29 +160,36 @@ class Config:
             values = {}
             rows = []
             dataShape = {
-                'fieldDefinitions' : {
-                    'name' : {
-                        'name' : 'name',
-                        'aspects' : {
-                            'isPrimaryKey' : True
+                'fieldDefinitions': {
+                    'name': {
+                        'name': 'name',
+                        'aspects': {
+                            'isPrimaryKey': True
                         },
-                    'description' : 'Property name',
+                    'description': 'Property name',
                     'baseType': 'STRING',
-                    'ordinal' : 0
+                    'ordinal': 0
                     },
-                    'time' : {
-                        'name' : 'time',
-                        'aspects' : {},
-                        'description' : 'time',
-                        'baseType' : 'DATETIME',
-                        'ordinal' : 0
+                    'time': {
+                        'name': 'time',
+                        'aspects': {},
+                        'description': 'time',
+                        'baseType': 'DATETIME',
+                        'ordinal': 0
                     },
-                    'value' : {
-                        'name' : 'value',
-                        'aspects' : {},
-                        'description' : 'value',
-                        'baseType' : 'VARIANT',
-                        'ordinal' : 0
+                    'value': {
+                        'name': 'value',
+                        'aspects': {},
+                        'description': 'value',
+                        'baseType': 'VARIANT',
+                        'ordinal': 0
+                    },
+                    'quality': {
+                        'name': 'quality',
+                        'aspects': {},
+                        'description': 'quality',
+                        'baseType': 'STRING',
+                        'ordinal': 0
                     }
                 }
             }
