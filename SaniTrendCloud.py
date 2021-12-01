@@ -217,13 +217,14 @@ class Config:
                     json_payload.append(data)
 
             values['rows'] = rows
-            value['dataShape'] = dataShape
+            values['dataShape'] = dataShape
 
             try:
                 thingworx_json = {
                     'values' : values
                 }
-                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, timeout=5)
+                print(thingworx_json)
+                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
                 if serviceResult.status_code == 200:
                     self.InfluxClient.write_points(json_payload)
                 else:
