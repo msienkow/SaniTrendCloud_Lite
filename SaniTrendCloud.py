@@ -53,7 +53,7 @@ class Config:
             self.PLCIPAddress = self._configData['Config']['PLCIPAddress']
             self.PLCScanRate = int(self._configData['Config']['PLCScanRate'])
             self.SMINumber = self._configData['Config']['SMINumber']
-            self.ServerURL = f'http://localhost:8000/Thingworx/{self.SMINumber}/'
+            self.ServerURL = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/'
             self._InfluxDB = self._configData['Config']['InfluxDB']
             self._InfluxPort = int(self._configData['Config']['InfluxPort'])
             self._InfluxUser = self._configData['Config']['InfluxUser']

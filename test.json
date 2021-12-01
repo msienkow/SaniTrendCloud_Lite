@@ -1,55 +1,129 @@
 {
-    "rows": [
-        {
-            "name": "entry1",
-            "time": 1637360360760,
-            "value": {
-                "value": 123,
-                "baseType": "NUMBER"
+    "values": {
+        "rows": [
+            {
+                "time": "2021-12-01T15:12:45.358186Z",
+                "quality": "GOOD",
+                "name": "Inches",
+                "value": {
+                    "value": 21.29,
+                    "baseType": "NUMBER"
+                }
             },
-            "quality": "GOOD"
-        },
-        {
-            "name": "entry2",
-            "time": 1637360360760,
-            "value": {
-                "value": 456,
-                "baseType": "NUMBER"
+            {
+                "time": "2021-12-01T15:12:45.358186Z",
+                "quality": "GOOD",
+                "name": "Test_Analog_Real",
+                "value": {
+                    "value": 864.0,
+                    "baseType": "NUMBER"
+                }
             },
-            "quality": "GOOD"
-        }
-    ],
-    "dataShape": {
-        "fieldDefinitions": {
-            "name": {
-                "name": "name",
-                "aspects": {
-                    "isPrimaryKey": true
+            {
+                "time": "2021-12-01T15:12:45.358186Z",
+                "quality": "GOOD",
+                "name": "Test_String",
+                "value": {
+                    "value": "This is a test",
+                    "baseType": "STRING"
+                }
+            },
+            {
+                "time": "2021-12-01T15:12:45.358186Z",
+                "quality": "GOOD",
+                "name": "Volts",
+                "value": {
+                    "value": 2.11,
+                    "baseType": "NUMBER"
+                }
+            },
+            {
+                "time": "2021-12-01T15:12:45.358186Z",
+                "quality": "GOOD",
+                "name": "_IO_EM_AI_01",
+                "value": {
+                    "value": 860,
+                    "baseType": "NUMBER"
+                }
+            },
+            {
+                "time": "2021-12-01T15:12:46.394328Z",
+                "quality": "GOOD",
+                "name": "Inches",
+                "value": {
+                    "value": 21.29,
+                    "baseType": "NUMBER"
+                }
+            },
+            {
+                "time": "2021-12-01T15:12:46.394328Z",
+                "quality": "GOOD",
+                "name": "Test_Analog_Real",
+                "value": {
+                    "value": 864.0,
+                    "baseType": "NUMBER"
+                }
+            },
+            {
+                "time": "2021-12-01T15:12:46.394328Z",
+                "quality": "GOOD",
+                "name": "Test_String",
+                "value": {
+                    "value": "This is a test",
+                    "baseType": "STRING"
+                }
+            },
+            {
+                "time": "2021-12-01T15:12:46.394328Z",
+                "quality": "GOOD",
+                "name": "Volts",
+                "value": {
+                    "value": 2.11,
+                    "baseType": "NUMBER"
+                }
+            },
+            {
+                "time": "2021-12-01T15:12:46.394328Z",
+                "quality": "GOOD",
+                "name": "_IO_EM_AI_01",
+                "value": {
+                    "value": 864,
+                    "baseType": "NUMBER"
+                }
+            }
+        ],
+        "dataShape": {
+            "fieldDefinitions": {
+                "name": {
+                    "name": "name",
+                    "aspects": {
+                        "isPrimaryKey": true
+                    },
+                    "description": "Property name",
+                    "baseType": "STRING",
+                    "ordinal": 0
                 },
-                "description": "Property name",
-                "baseType": "STRING",
-                "ordinal": 0
-            },
-            "time": {
-                "name": "time",
-                "aspects": {},
-                "description": "time",
-                "baseType": "DATETIME",
-                "ordinal": 0
-            },
-            "value": {
-                "name": "value",
-                "aspects": {},
-                "description": "value",
-                "baseType": "VARIANT",
-                "ordinal": 0
-            },
-            "quality": {
-                "name": "quality",
-                "aspects": {},
-                "description": "quality",
-                "baseType": "STRING",
-                "ordinal": 0
+                "time": {
+                    "name": "time",
+                    "aspects": {},
+                    "description": "time",
+                    "baseType": "DATETIME",
+                    "ordinal": 0
+                },
+                "value": {
+                    "name": "value",
+                    "aspects": {},
+                    "description": "value",
+                    "baseType": "VARIANT",
+                    "ordinal": 0
+                },
+                "quality": {
+                    "name": "quality",
+                    "aspects": {},
+                    "description": "quality",
+                    "baseType": "STRING",
+                    "ordinal": 0
+                }
             }
         }
     }
