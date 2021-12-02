@@ -152,7 +152,7 @@ class Config:
         twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
         if twx_elapsed_time > self._TwxTimerSP and self.isConnected:
             threading.Thread(target=self._SendToTwx).start()
-            self._Twx_Last_Write = time.perf_counter()
+            
 
     # Query Influx database and send unsent data to Thingworx
     def _SendToTwx(self,):
@@ -237,7 +237,7 @@ class Config:
                 thingworx_json = {
                     'values' : values
                 }
-                self.LogErrorToFile('thingworx', json.dumps(thingworx_json))
+
                 serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
                 if serviceResult.status_code == 200:
                     self.InfluxClient.write_points(json_payload)
