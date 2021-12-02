@@ -140,13 +140,17 @@ class Config:
 
         influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
         if influx_elapsed_time > self._InfluxTimerSP: 
-            self._Influx_Last_Write = time.perf_counter() 
-            self.InfluxClient.write_points(self._Influx_Log_Buffer)
-            # print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
+            self._Influx_Last_Write = time.perf_counter()
+            try: 
+                self.InfluxClient.write_points(self._Influx_Log_Buffer)
+                # print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
+            except Exception as e:
+                self.LogErrorToFile('_LogData', e)
+
             self._Influx_Log_Buffer = []
 
         twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
-        if twx_elapsed_time > self._TwxTimerSP:
+        if twx_elapsed_time > self._TwxTimerSP and self.isConnected:
             threading.Thread(target=self._SendToTwx).start()
             self._Twx_Last_Write = time.perf_counter()
 
@@ -241,7 +245,6 @@ class Config:
                     self.LogErrorToFile('_SendToTwx', serviceResult)
 
             except Exception as e:
-                self.isConnected = False
                 self.LogErrorToFile('_SendToTwx', e)  
 
     def LogErrorToFile(self, name, error):
