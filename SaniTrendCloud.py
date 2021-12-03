@@ -121,28 +121,39 @@ class Config:
     # Influx DB Data Logging
     def _LogData(self,):
         fields = {}
-        data = {
-            "measurement": "data",
-            "tags" : {},
-            "time" : datetime.now(),
-            "fields" : {}
-        }
+        # data = {
+        #     "measurement": "data",
+        #     "tags" : {},
+        #     "time" : datetime.now(),
+        #     "fields" : {}
+        # }
+  
+        entry = ""
+        timestamp = datetime.now()
+        entry = f'data'
 
         for dict in self.TagTable:
             tag = dict['tag']
             tagValue = self.GetTagValue(TagName=tag)
             value = round(tagValue, 2) if isinstance(tagValue, float) else tagValue
-            fields[tag] = value
-        fields['SentToTwx'] = False
+            entry += f',{tag}={value}'
+        entry += f',SentToTwx=false {timestamp}'
+        self._Influx_Log_Buffer.append(entry)
 
-        data['fields'] = fields
-        self._Influx_Log_Buffer.append(data)
+        #     fields[tag] = value
+        # fields['SentToTwx'] = False
+
+        # data['fields'] = fields
+        # self._Influx_Log_Buffer.append(data)
 
         influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
         if influx_elapsed_time > self._InfluxTimerSP: 
             self._Influx_Last_Write = time.perf_counter()
             try: 
-                self.InfluxClient.write_points(self._Influx_Log_Buffer)
+
+                self.InfluxClient.write_points(self._Influx_Log_Buffer, database='sanitrend', time_precision='ms', protocol='line')
+
+                #self.InfluxClient.write_points(self._Influx_Log_Buffer)
                 # print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
             except Exception as e:
                 self.LogErrorToFile('_LogData', e)
@@ -151,13 +162,14 @@ class Config:
 
         twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
         if twx_elapsed_time > self._TwxTimerSP and self.isConnected:
+            self._Twx_Last_Write = time.perf_counter()
             threading.Thread(target=self._SendToTwx).start()
             
 
     # Query Influx database and send unsent data to Thingworx
     def _SendToTwx(self,):
         json_payload = []
-        query = self.InfluxClient.query('select * from data where SentToTwx = false')
+        query = self.InfluxClient.query('select * from data where SentToTwx = false limit 256')
 
         if query:
             url = f'{self.ServerURL}Services/UpdatePropertyValues'
