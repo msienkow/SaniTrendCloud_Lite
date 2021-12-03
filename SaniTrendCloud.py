@@ -136,7 +136,7 @@ class Config:
             tag = dict['tag']
             tagValue = self.GetTagValue(TagName=tag)
             value = round(tagValue, 2) if isinstance(tagValue, float) else tagValue
-            entry += f',{tag}={value}'
+            entry += f' {tag}={value}'
         entry += f' SentToTwx=false {timestamp}'
         self._Influx_Log_Buffer.append(entry)
 
