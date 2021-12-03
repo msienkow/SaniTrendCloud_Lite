@@ -120,17 +120,9 @@ class Config:
     
     # Influx DB Data Logging
     def _LogData(self,):
-        fields = {}
-        # data = {
-        #     "measurement": "data",
-        #     "tags" : {},
-        #     "time" : datetime.now(),
-        #     "fields" : {}
-        # }
-  
         entry = ""
-        timestamp = datetime.now()
-        entry = f'data, '
+        timestamp = self.GetTimeMS()
+        entry = f'data '
 
         for dict in self.TagTable:
             tag = dict['tag']
@@ -143,24 +135,13 @@ class Config:
         entry += f'SentToTwx=false {timestamp}'
         self._Influx_Log_Buffer.append(entry)
 
-        #     fields[tag] = value
-        # fields['SentToTwx'] = False
-
-        # data['fields'] = fields
-        # self._Influx_Log_Buffer.append(data)
-
         influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
         if influx_elapsed_time > self._InfluxTimerSP: 
             self._Influx_Last_Write = time.perf_counter()
             try: 
-
                 self.InfluxClient.write_points(self._Influx_Log_Buffer, database='sanitrend', time_precision='ms', protocol='line')
-
-                #self.InfluxClient.write_points(self._Influx_Log_Buffer)
-                # print(f'Logged the folowing data to influx {self._Influx_Log_Buffer}')
             except Exception as e:
                 self.LogErrorToFile('_LogData', e)
-
             self._Influx_Log_Buffer = []
 
         twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
