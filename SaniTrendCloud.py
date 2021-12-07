@@ -220,7 +220,7 @@ class Config:
                             else: 
                                 entry += f'{key}={value},'
 
-                    entry += f'SentToTwx=true {timestamp}'
+                    entry += f'SentToTwx=true {int(timestamp.timestamp() * 1000)}'
                     influx_update.append(entry)
 
                 values['rows'] = rows
