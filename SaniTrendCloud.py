@@ -153,94 +153,100 @@ class Config:
     # Query Influx database and send unsent data to Thingworx
     def _SendToTwx(self,):
         influx_update = []
-        query = self.InfluxClient.query('select * from data where SentToTwx = false limit 256')
+        try:
+            query = self.InfluxClient.query('select * from data where SentToTwx = false limit 256')
 
-        if query:
-            url = f'{self.ServerURL}Services/UpdatePropertyValues'
-            values = {}
-            rows = []
-            dataShape = {
-                'fieldDefinitions': {
-                    'name': {
-                        'name': 'name',
-                        'aspects': {
-                            'isPrimaryKey': True
-                        },
-                    'description': 'Property name',
-                    'baseType': 'STRING',
-                    'ordinal': 0
-                    },
-                    'time': {
-                        'name': 'time',
-                        'aspects': {},
-                        'description': 'time',
-                        'baseType': 'DATETIME',
-                        'ordinal': 0
-                    },
-                    'value': {
-                        'name': 'value',
-                        'aspects': {},
-                        'description': 'value',
-                        'baseType': 'VARIANT',
-                        'ordinal': 0
-                    },
-                    'quality': {
-                        'name': 'quality',
-                        'aspects': {},
-                        'description': 'quality',
+            if query:
+                url = f'{self.ServerURL}Services/UpdatePropertyValues'
+                values = {}
+                rows = []
+                dataShape = {
+                    'fieldDefinitions': {
+                        'name': {
+                            'name': 'name',
+                            'aspects': {
+                                'isPrimaryKey': True
+                            },
+                        'description': 'Property name',
                         'baseType': 'STRING',
                         'ordinal': 0
+                        },
+                        'time': {
+                            'name': 'time',
+                            'aspects': {},
+                            'description': 'time',
+                            'baseType': 'DATETIME',
+                            'ordinal': 0
+                        },
+                        'value': {
+                            'name': 'value',
+                            'aspects': {},
+                            'description': 'value',
+                            'baseType': 'VARIANT',
+                            'ordinal': 0
+                        },
+                        'quality': {
+                            'name': 'quality',
+                            'aspects': {},
+                            'description': 'quality',
+                            'baseType': 'STRING',
+                            'ordinal': 0
+                        }
                     }
                 }
-            }
 
-            for row in query:
-                for dict in row:
-                    entry = f'data '
-                    timestamp = dict['time'] 
-                    for key,value in dict.items():
-                        twxvalue = {}
-                        twxvalue['time'] = timestamp
-                        twxvalue['quality'] = 'GOOD'
-                        if key != 'time' and key != 'SentToTwx':
-                            twxvalue['name'] = key
-                            twxtypes = (item['twxtype'] for item in self.TagTable if item['tag'] == key)
-                            for i in twxtypes:
-                                baseType = i
-                            twxvalue['value'] = {
-                                'value' : value,
-                                'baseType' : baseType
-                            }
+                for row in query:
+                    for dict in row:
+                        entry = f'data '
+                        timestamp = dict['time'] 
+                        for key,value in dict.items():
+                            twxvalue = {}
+                            twxvalue['time'] = timestamp
+                            twxvalue['quality'] = 'GOOD'
+                            if key != 'time' and key != 'SentToTwx':
+                                twxvalue['name'] = key
+                                twxtypes = (item['twxtype'] for item in self.TagTable if item['tag'] == key)
+                                for i in twxtypes:
+                                    baseType = i
+                                twxvalue['value'] = {
+                                    'value' : value,
+                                    'baseType' : baseType
+                                }
 
-                            rows.append(twxvalue)
+                                rows.append(twxvalue)
 
-                            value = round(value, 2) if isinstance(value, float) else value
-                            if isinstance(value, str):
-                                entry += f'{key}="{value}",'
-                            else: 
-                                entry += f'{key}={value},'
-                    parsed_time = dateutil.parser.parse(timestamp)
-                    milliseconds = int(parsed_time.timestamp() * 1000)
-                    entry += f'SentToTwx=true {milliseconds}'
-                    influx_update.append(entry)
+                                value = round(value, 2) if isinstance(value, float) else value
+                                if isinstance(value, str):
+                                    entry += f'{key}="{value}",'
+                                else: 
+                                    entry += f'{key}={value},'
+                        parsed_time = dateutil.parser.parse(timestamp)
+                        milliseconds = int(parsed_time.timestamp() * 1000)
+                        entry += f'SentToTwx=true {milliseconds}'
+                        influx_update.append(entry)
 
-                values['rows'] = rows
-                values['dataShape'] = dataShape
+                    values['rows'] = rows
+                    values['dataShape'] = dataShape
 
-            try:
-                thingworx_json = {
-                    'values' : values
-                }
+                try:
+                    thingworx_json = {
+                        'values' : values
+                    }
 
-                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
-                if serviceResult.status_code == 200:
-                    self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
-                    pass
-                else:
-                    self.LogErrorToFile('_SendToTwx', serviceResult)
+                    serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
+                    if serviceResult.status_code == 200:
+                        try:
+                            self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
+                        except Exception as e:
+                            self.LogErrorToFile('Update Influx Data Failed!', 'Change me to "e" to gather exception.')
+                    else:
+                        self.LogErrorToFile('_SendToTwx', serviceResult)
 
-            except Exception as e:
-                self.LogErrorToFile('_SendToTwx', e)  
+                except Exception as e:
+                    self.LogErrorToFile('_SendToTwx', e)
+                      
+        except Exception as e:
+                self.LogErrorToFile('_SendToTwx', e)
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'../ErrorLogs'
