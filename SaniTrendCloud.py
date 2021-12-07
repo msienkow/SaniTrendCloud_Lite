@@ -7,6 +7,7 @@ from datetime import datetime
 from requests.models import HTTPError
 import requests
 import os
+import dateutil.parser
 from influxdb import InfluxDBClient, resultset
 
 # Overall Configuration Class to import that has
@@ -151,7 +152,6 @@ class Config:
 
     # Query Influx database and send unsent data to Thingworx
     def _SendToTwx(self,):
-        json_payload = []
         entry = f'data '
         influx_update = []
         query = self.InfluxClient.query('select * from data where SentToTwx = false limit 256')
@@ -219,8 +219,9 @@ class Config:
                                 entry += f'{key}="{value}",'
                             else: 
                                 entry += f'{key}={value},'
-
-                    entry += f'SentToTwx=true {int(timestamp.timestamp() * 1000)}'
+                    parsed_time = dateutil.parser.parse(timestamp)
+                    milliseconds = int(parsed_time.timestamp() * 1000)
+                    entry += f'SentToTwx=true {milliseconds}'
                     influx_update.append(entry)
 
                 values['rows'] = rows
