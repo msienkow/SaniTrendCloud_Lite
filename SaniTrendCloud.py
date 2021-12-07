@@ -195,8 +195,8 @@ class Config:
             }
 
             for row in query:
-                entry = f'data '
                 for dict in row:
+                    entry = f'data '
                     timestamp = dict['time'] 
                     for key,value in dict.items():
                         twxvalue = {}
@@ -219,10 +219,10 @@ class Config:
                                 entry += f'{key}="{value}",'
                             else: 
                                 entry += f'{key}={value},'
-                parsed_time = dateutil.parser.parse(timestamp)
-                milliseconds = int(parsed_time.timestamp() * 1000)
-                entry += f'SentToTwx=true {milliseconds}'
-                influx_update.append(entry)
+                    parsed_time = dateutil.parser.parse(timestamp)
+                    milliseconds = int(parsed_time.timestamp() * 1000)
+                    entry += f'SentToTwx=true {milliseconds}'
+                    influx_update.append(entry)
 
                 values['rows'] = rows
                 values['dataShape'] = dataShape
@@ -234,7 +234,9 @@ class Config:
 
                 serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
                 if serviceResult.status_code == 200:
-                    self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
+                    # self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
+                    print(influx_update)
+                    pass
                 else:
                     self.LogErrorToFile('_SendToTwx', serviceResult)
 
