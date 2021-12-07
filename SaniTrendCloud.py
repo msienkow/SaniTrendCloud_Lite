@@ -152,7 +152,6 @@ class Config:
 
     # Query Influx database and send unsent data to Thingworx
     def _SendToTwx(self,):
-        entry = f'data '
         influx_update = []
         query = self.InfluxClient.query('select * from data where SentToTwx = false limit 256')
 
@@ -196,6 +195,7 @@ class Config:
             }
 
             for row in query:
+                entry = f'data '
                 for dict in row:
                     timestamp = dict['time'] 
                     for key,value in dict.items():
@@ -219,10 +219,10 @@ class Config:
                                 entry += f'{key}="{value}",'
                             else: 
                                 entry += f'{key}={value},'
-                    parsed_time = dateutil.parser.parse(timestamp)
-                    milliseconds = int(parsed_time.timestamp() * 1000)
-                    entry += f'SentToTwx=true {milliseconds}'
-                    influx_update.append(entry)
+                parsed_time = dateutil.parser.parse(timestamp)
+                milliseconds = int(parsed_time.timestamp() * 1000)
+                entry += f'SentToTwx=true {milliseconds}'
+                influx_update.append(entry)
 
                 values['rows'] = rows
                 values['dataShape'] = dataShape
