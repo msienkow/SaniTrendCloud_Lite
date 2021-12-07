@@ -234,8 +234,7 @@ class Config:
 
                 serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
                 if serviceResult.status_code == 200:
-                    # self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
-                    print(influx_update)
+                    self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
                     pass
                 else:
                     self.LogErrorToFile('_SendToTwx', serviceResult)
