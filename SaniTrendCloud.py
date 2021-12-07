@@ -120,9 +120,8 @@ class Config:
     
     # Influx DB Data Logging
     def _LogData(self,):
-        entry = ""
-        timestamp = self.GetTimeMS()
         entry = f'data '
+        timestamp = self.GetTimeMS()
 
         for dict in self.TagTable:
             tag = dict['tag']
@@ -153,6 +152,8 @@ class Config:
     # Query Influx database and send unsent data to Thingworx
     def _SendToTwx(self,):
         json_payload = []
+        entry = f'data '
+        influx_update = []
         query = self.InfluxClient.query('select * from data where SentToTwx = false limit 256')
 
         if query:
@@ -197,21 +198,11 @@ class Config:
             for row in query:
                 for dict in row:
                     timestamp = dict['time'] 
-                    data = {
-                        "measurement" : "data",
-                        "tags" : {},
-                        "time" : timestamp,
-                        "fields" : {}
-                    }
-
-                    fields = {}
-                    twx_data = {}
                     for key,value in dict.items():
                         twxvalue = {}
                         twxvalue['time'] = timestamp
                         twxvalue['quality'] = 'GOOD'
                         if key != 'time' and key != 'SentToTwx':
-                            fields[key] = value
                             twxvalue['name'] = key
                             twxtypes = (item['twxtype'] for item in self.TagTable if item['tag'] == key)
                             for i in twxtypes:
@@ -220,11 +211,17 @@ class Config:
                                 'value' : value,
                                 'baseType' : baseType
                             }
+
                             rows.append(twxvalue)
-                        elif key == 'SentToTwx':
-                            fields[key] = True
-                    data['fields'] = fields
-                    json_payload.append(data)
+
+                            value = round(value, 2) if isinstance(value, float) else value
+                            if isinstance(value, str):
+                                entry += f'{key}="{value}",'
+                            else: 
+                                entry += f'{key}={value},'
+
+                    entry += f'SentToTwx=true {timestamp}'
+                    influx_update.append(entry)
 
                 values['rows'] = rows
                 values['dataShape'] = dataShape
@@ -236,7 +233,7 @@ class Config:
 
                 serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
                 if serviceResult.status_code == 200:
-                    self.InfluxClient.write_points(json_payload)
+                    self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
                 else:
                     self.LogErrorToFile('_SendToTwx', serviceResult)
 
