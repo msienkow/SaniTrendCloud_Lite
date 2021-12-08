@@ -8,7 +8,7 @@ import board
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-from gpiozero import LED
+from gpiozero import PWMLED
 
 
 def scale(Input, Input_Min, Input_Max, Scaled_Min, Scaled_Max):
@@ -30,7 +30,7 @@ ads.gain = 1
 # Create single-ended input on channel 0
 chan = AnalogIn(ads, ADS.P1)
 
-led = LED(18)
+led = PWMLED(18)
 led.off()
 
 def main():
@@ -46,7 +46,7 @@ def main():
 
     while runCode:
         try:
-            led.on()
+            led.value = 0.5
             # Get Connection Status For EMS
             SaniTrend.ConnectionStatus()
             value = scale(chan.value, 4799.853515625 , 23999.267578125, 30, 230)
@@ -72,7 +72,7 @@ def main():
             else:
                 PLC.open()
 
-            led.off()
+            led.value = 0
             time.sleep(SaniTrend.PLCScanRate * 0.001)
             
         except CommError:
@@ -97,6 +97,7 @@ def main():
             PLC.close()
             SaniTrend.LogErrorToFile('Final Exception', error)
             runCode = False
+            led.value = 0
 
 if __name__ == "__main__":
     main()
