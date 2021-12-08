@@ -8,6 +8,7 @@ import board
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
+from gpiozero import PWMLED
 
 
 def scale(Input, Input_Min, Input_Max, Scaled_Min, Scaled_Max):
@@ -29,6 +30,9 @@ ads.gain = 1
 # Create single-ended input on channel 0
 chan = AnalogIn(ads, ADS.P1)
 
+led = PWMLED(18)
+led.off()
+
 def main():
 
     # Set up SaniTrend parameters, tags, cloud configurations, etc...
@@ -46,7 +50,7 @@ def main():
             SaniTrend.ConnectionStatus()
             value = scale(chan.value, 4799.853515625 , 23999.267578125, 30, 230)
             value = round(value, 2)
-            
+            led.off()
             if PLC.connected:
                 # Read PLC tags
                 SaniTrend.TagData = PLC.read(*SaniTrend.Tags)
@@ -68,11 +72,12 @@ def main():
                 PLC.open()
 
             time.sleep(SaniTrend.PLCScanRate * 0.001)
-
+            led.pulse(fade_in_time=0.1, fade_out_time=0.1)
         except CommError:
             PLCErrorCount += 1
             print(f'Communication Error! Fail Count: {PLCErrorCount}')
             SaniTrend.LogErrorToFile('PLC Comms Failed', CommError)
+            led.on()
             if PLCErrorCount < 6:
                 time.sleep(10)
             else:
