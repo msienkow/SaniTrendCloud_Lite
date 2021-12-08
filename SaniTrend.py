@@ -30,7 +30,7 @@ ads.gain = 1
 # Create single-ended input on channel 0
 chan = AnalogIn(ads, ADS.P1)
 
-led = PWMLED(18)
+led = PWMLED(15)
 led.off()
 
 def main():
