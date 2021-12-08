@@ -113,7 +113,7 @@ class Config:
             url = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/Properties/Sim_Value'
             serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders, timeout=5)
             if serviceResult.status_code == 200:
-                self.Sim_Value = (serviceResult.json())['rows'][0]['isConnected']
+                self.Sim_Value = (serviceResult.json())['rows'][0]['Sim_Value']
         
         except Exception as e:
             self.isConnected = False
