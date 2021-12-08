@@ -8,12 +8,15 @@ from requests.models import HTTPError
 import requests
 import os
 import dateutil.parser
-from influxdb import InfluxDBClient, resultset
+from influxdb import InfluxDBClient
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud
 class Config:
     def __init__(self, *, ConfigFile=''):
+        
+        self.Sim_Value = 30
+        
         self.PLCIPAddress = ''
         self.PLCScanRate = 1000
         self.Tags = []
@@ -21,7 +24,7 @@ class Config:
         self.TagTable = []
         self.ServerURL = ''
         self.SMINumber = ''
-        self.ConnectionStatusTime= 10
+        self.ConnectionStatusTime= 2
         self.isConnected = False
         self._ConnectionStatusRunning = False
         self._LastStatusUpdate = 0
@@ -107,6 +110,11 @@ class Config:
                 self.LogErrorToFile('_ConnectionStatus', serviceResult)
                 self.isConnected = False
 
+            url = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/Properties/Sim_Value'
+            serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders, timeout=5)
+            if serviceResult.status_code == 200:
+                self.Sim_Value = (serviceResult.json())['rows'][0]['isConnected']
+        
         except Exception as e:
             self.isConnected = False
             self.LogErrorToFile('_ConnectionStatus', e)
