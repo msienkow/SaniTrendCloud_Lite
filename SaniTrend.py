@@ -72,8 +72,9 @@ def main():
             else:
                 PLC.open()
 
-            time.sleep(SaniTrend.PLCScanRate * 0.001)
             led.off()
+            time.sleep(SaniTrend.PLCScanRate * 0.001)
+            
         except CommError:
             PLCErrorCount += 1
             print(f'Communication Error! Fail Count: {PLCErrorCount}')
