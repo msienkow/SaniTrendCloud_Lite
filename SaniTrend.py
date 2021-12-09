@@ -148,6 +148,7 @@ def main():
             disp.show()
             currentSeconds = time.perf_counter()
             if (currentSeconds - lastDisplayUpdate) > disp_time:
+                lastDisplayUpdate = time.perf_counter()
                 text_item += 1
                 if text_item >= text_items:
                     text_item = 0
