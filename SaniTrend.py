@@ -64,7 +64,7 @@ x = 0
 
 # Load default font.
 # font = ImageFont.load_default()
-font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 11)
+font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 10)
 
 def main():
     
