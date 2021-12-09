@@ -79,7 +79,6 @@ text = [
     }
 ]
 text_items = len(text)
-text_item = 0
 
 def main():
     
@@ -90,6 +89,7 @@ def main():
     PLC = LogixDriver(SaniTrend.PLCIPAddress)
 
     PLCErrorCount = 0
+    text_item = 0
     runCode = True
 
     while runCode:
