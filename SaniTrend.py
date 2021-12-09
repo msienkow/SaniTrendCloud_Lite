@@ -134,8 +134,8 @@ def main():
             # text[2]['text'] = connection_text
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
             
-            draw.text((x, top + 0), text[text_item]['title'], font=font, fill=255)
-            draw.text((x, top + 16), text[text_item['text']], font=font, fill=255)
+            draw.text((x, top + 0), text[text_item].title, font=font, fill=255)
+            draw.text((x, top + 16), text[text_item].text, font=font, fill=255)
             # draw.text((x, top + 8), voltage_text, font=font, fill=255)
             # draw.text((x, top + 16), value_text, font=font, fill=255)
             # draw.text((x, top + 25), connection_text, font=font, fill=255)
