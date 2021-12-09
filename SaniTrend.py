@@ -62,8 +62,8 @@ bottom = height - padding
 x = 0
 
 # Load default font.
-# font = ImageFont.load_default()
-font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 9)
+font = ImageFont.load_default()
+# font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 9)
 
 def main():
     
