@@ -127,6 +127,9 @@ def main():
             disp.show()
 
             time.sleep(SaniTrend.PLCScanRate * 0.001)
+
+            disp.scroll(0,20)
+            disp.show()
                    
         except CommError:
             PLCErrorCount += 1
