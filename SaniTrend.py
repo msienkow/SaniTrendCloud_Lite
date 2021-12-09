@@ -9,6 +9,8 @@ import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 from gpiozero import PWMLED
+from PIL import Image, ImageDraw, ImageFont
+import adafruit_ssd1306
 
 
 def scale(Input, Input_Min, Input_Max, Scaled_Min, Scaled_Max):
@@ -33,6 +35,36 @@ chan = AnalogIn(ads, ADS.P1)
 led = PWMLED(18)
 led.off()
 
+disp = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
+
+# Clear display.
+disp.fill(0)
+disp.show()
+
+# Create blank image for drawing.
+# Make sure to create image with mode '1' for 1-bit color.
+width = disp.width
+height = disp.height
+image = Image.new("1", (width, height))
+
+# Get drawing object to draw on image.
+draw = ImageDraw.Draw(image)
+
+# Draw a black filled box to clear the image.
+draw.rectangle((0, 0, width, height), outline=0, fill=0)
+
+# Draw some shapes.
+# First define some constants to allow easy resizing of shapes.
+padding = -2
+top = padding
+bottom = height - padding
+# Move left to right keeping track of the current x position for drawing shapes.
+x = 0
+
+
+# Load default font.
+font = ImageFont.load_default()
+
 def main():
     
     # Set up SaniTrend parameters, tags, cloud configurations, etc...
@@ -47,13 +79,33 @@ def main():
     while runCode:
         try:
             led.value = 0.5
-            # Get Connection Status For EMS
+            
             min = 4799.853515625
             max = 23999.267578125
-            SaniTrend.ConnectionStatus()
             value = scale(chan.value, min, max, 30, 230)
             value = round(value, 2)
+
+            temp_text = f'Temp: {value}°F'
+            voltage_text = f'Voltage: {chan.voltage}VDC'
+            value_text = f'Value: {chan.value}'
+            connection_text = ''
+            if SaniTrend.isConnected:
+                connection_text = f'SaniTrend Connected to Cloud'
+            else:
+                connection_text = f'SaniTrend Disconnected'
+            draw.rectangle((0, 0, width, height), outline=0, fill=0)
+            draw.text((x, top + 0), temp_text, font=font, fill=255)
+            draw.text((x, top + 8), voltage_text + CPU, font=font, fill=255)
+            draw.text((x, top + 16), value_text, font=font, fill=255)
+            draw.text((x, top + 25), connection_text, font=font, fill=255)
+
+            # Display image.
+            disp.image(image)
+            disp.show()
             
+            # Get Connection Status For EMS
+            SaniTrend.ConnectionStatus()
+
             if PLC.connected:
                 # Read PLC tags
                 SaniTrend.TagData = PLC.read(*SaniTrend.Tags)
