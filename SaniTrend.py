@@ -113,16 +113,17 @@ def main():
 
             temp_text = f'Temp: {value}°F'
             temp_voltage = round(chan.voltage, 2)
-            voltage_text = f'Voltage: {temp_voltage}VDC'
+            voltage_text = f'Volts: {temp_voltage}VDC'
             value_text = f'Value: {chan.value}'
-            connection_text = 'SaniTrend Connected' if SaniTrend.isConnected else 'SaniTrend Disconnected'
+            connection_text = 'STC Connected' if SaniTrend.isConnected else 'STC Disconnected'
             
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
             draw.text((x, top + 0), temp_text, font=font, fill=255)
             # draw.text((x, top + 8), voltage_text, font=font, fill=255)
             # draw.text((x, top + 16), value_text, font=font, fill=255)
             # draw.text((x, top + 25), connection_text, font=font, fill=255)
-            draw.text((x, top + 16), connection_text, font=font, fill=255)
+            draw.text((x, top + 16), voltage_text, font=font, fill=255)
+            draw.text((x, top + 25), connection_text, font=font, fill=255)
 
             # Display image.
             disp.image(image)
