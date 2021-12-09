@@ -48,8 +48,10 @@ def main():
         try:
             led.value = 0.5
             # Get Connection Status For EMS
+            min = 4799.853515625
+            max = 23999.267578125
             SaniTrend.ConnectionStatus()
-            value = scale(chan.value, 4629.192057291667, 23145.96028645833, 30, 230)
+            value = scale(chan.value, min, max, 30, 230)
             value = round(value, 2)
             
             if PLC.connected:
