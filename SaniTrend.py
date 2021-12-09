@@ -112,7 +112,7 @@ def main():
 
             temp_text = f'Temp: {value}°F'
             temp_voltage = round(chan.voltage, 2)
-            voltage_text = f'Volts: {temp_voltage}VDC'
+            voltage_text = f'Cond: {temp_voltage}mS/cm'
             value_text = f'Value: {chan.value}'
             connection_text = 'STC Connected' if SaniTrend.isConnected else 'STC Disconnected'
             
