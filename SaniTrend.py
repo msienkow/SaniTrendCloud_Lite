@@ -63,7 +63,7 @@ x = 0
 
 # Load default font.
 # font = ImageFont.load_default()
-font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', 9)
+font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', 11)
 
 def main():
     
@@ -121,8 +121,6 @@ def main():
             draw.text((x, top + 8), voltage_text, font=font, fill=255)
             draw.text((x, top + 16), value_text, font=font, fill=255)
             draw.text((x, top + 25), connection_text, font=font, fill=255)
-            # draw.text((x, top + 12), voltage_text, font=font, fill=255)
-            # draw.text((x, top + 24), connection_text, font=font, fill=255)
 
             # Display image.
             disp.image(image)
@@ -145,6 +143,9 @@ def main():
             print("\n\nExiting Python and closing PLC connection...\n\n\n")
             PLC.close()
             runCode = False
+            disp.fill(0)
+            disp.show()
+            led.value = 0
 
         except Exception as error:
             print(error)
@@ -152,7 +153,10 @@ def main():
             PLC.close()
             SaniTrend.LogErrorToFile('Final Exception', error)
             runCode = False
+            disp.fill(0)
+            disp.show()
             led.value = 0
+            
 
 if __name__ == "__main__":
     main()
