@@ -64,6 +64,22 @@ x = 0
 # Load default font.
 # font = ImageFont.load_default()
 font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
+text = [
+    {
+        'title' : 'Temperature',
+        'text' : ''
+    },
+    {
+        'title' : 'Conductivity',
+        'text' : ''
+    },
+    {
+        'title' : 'SaniTrend',
+        'text' : ''
+    }
+]
+text_items = len(text)
+text_item = 0
 
 def main():
     
@@ -109,16 +125,16 @@ def main():
                 PLC.open()
 
             led.value = 0
-
-            temp_text = f'Temp: {value}°F'
-            temp_voltage = round(chan.voltage, 2)
-            voltage_text = f'Cond: {temp_voltage}mS/cm'
-            value_text = f'Value: {chan.value}'
-            connection_text = 'STC Connected' if SaniTrend.isConnected else 'STC Disconnected'
             
+            text[0]['text'] = f'Temp: {value}°F'
+            temp_voltage = round(chan.voltage, 2)
+            text[1]['text'] = f'Cond: {temp_voltage}mS/cm'
+            connection_text = 'Connected' if SaniTrend.isConnected else 'Disconnected'
+            text[2]['text'] = connection_text
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
-            draw.text((x, top + 0), temp_text, font=font, fill=255)
-            draw.text((x, top + 16), voltage_text, font=font, fill=255)
+            
+            draw.text((x, top + 0), text[text_item]['title'], font=font, fill=255)
+            draw.text((x, top + 16), text[text_item['text']], font=font, fill=255)
             # draw.text((x, top + 8), voltage_text, font=font, fill=255)
             # draw.text((x, top + 16), value_text, font=font, fill=255)
             # draw.text((x, top + 25), connection_text, font=font, fill=255)
@@ -127,7 +143,10 @@ def main():
             disp.image(image)
             disp.show()
 
+            text_item = 0 if text_item == text_items else text_item + 1
+
             time.sleep(SaniTrend.PLCScanRate * 0.001)
+            
                    
         except CommError:
             PLCErrorCount += 1
