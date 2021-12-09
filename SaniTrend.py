@@ -79,6 +79,7 @@ text = [
     }
 ]
 text_items = len(text)
+text_item = 0
 
 def main():
     
@@ -89,7 +90,7 @@ def main():
     PLC = LogixDriver(SaniTrend.PLCIPAddress)
 
     PLCErrorCount = 0
-    text_item = 0
+    
     runCode = True
 
     while runCode:
@@ -143,7 +144,10 @@ def main():
             disp.image(image)
             disp.show()
 
-            text_item = 0 if text_item == text_items else text_item + 1
+            if text_item == text_items:
+                text_item = 0
+            else:
+                text_item = text_item
 
             time.sleep(SaniTrend.PLCScanRate * 0.001)
             
