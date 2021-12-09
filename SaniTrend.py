@@ -146,8 +146,8 @@ def main():
             # Display image.
             disp.image(image)
             disp.show()
-
-            if (time.perf_counter - lastDisplayUpdate) > disp_time:
+            currentSeconds = time.perf_counter()
+            if (currentSeconds - lastDisplayUpdate) > disp_time:
                 if text_item >= text_items:
                     text_item = 0
                 else:
