@@ -64,37 +64,40 @@ x = 0
 # Load default font.
 # font = ImageFont.load_default()
 font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
-text = [
-    {
-        'title' : 'Temperature',
-        'text' : 'test'
-    },
-    {
-        'title' : 'Conductivity',
-        'text' : 'test'
-    },
-    {
-        'title' : 'SaniTrend',
-        'text' : 'test'
-    }
-]
-text_items = len(text)
+
 
 def main():
-    
     # Set up SaniTrend parameters, tags, cloud configurations, etc...
     SaniTrend = SaniTrendCloud.Config(ConfigFile="../SaniTrendConfig.json")
 
     # Setup PLC Communication Driver
     PLC = LogixDriver(SaniTrend.PLCIPAddress)
-
     PLCErrorCount = 0
+
+    text = [
+        {
+            'title' : 'Temperature',
+            'text' : 'test'
+        },
+        {
+            'title' : 'Conductivity',
+            'text' : 'test'
+        },
+        {
+            'title' : 'SaniTrend',
+            'text' : 'test'
+        }
+    ]
+
+    text_items = len(text)
+    disp_time = 2
     text_item = 0
+    lastDisplayUpdate = time.perf_counter()
     
     runCode = True
 
     while runCode:
-        try:
+        try:          
             led.value = 0.5
             
             min = 4799.853515625
@@ -144,9 +147,14 @@ def main():
             disp.image(image)
             disp.show()
 
-            text_item += 1
-            if text_item == text_items:
-                text_item = 0
+            if (time.perf_counter - lastDisplayUpdate) > disp_time:
+                if text_item >= text_items:
+                    text_item = 0
+                else:
+                    text_item += 1
+            # text_item += 1
+            # if text_item == text_items:
+            #     text_item = 0
 
             time.sleep(SaniTrend.PLCScanRate * 0.001)
             
