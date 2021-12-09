@@ -145,6 +145,8 @@ def main():
             disp.show()
 
             text_item += 1
+            if text_item == text_items:
+                text_item = 0
 
             time.sleep(SaniTrend.PLCScanRate * 0.001)
             
