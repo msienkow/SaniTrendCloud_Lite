@@ -127,11 +127,11 @@ def main():
 
             led.value = 0
             
-            # text[0]['text'] = f'Temp: {value}°F'
-            # temp_voltage = round(chan.voltage, 2)
-            # text[1]['text'] = f'Cond: {temp_voltage}mS/cm'
-            # connection_text = 'Connected' if SaniTrend.isConnected else 'Disconnected'
-            # text[2]['text'] = connection_text
+            text[0]['text'] = f'{value} °F'
+            temp_voltage = round(chan.voltage, 2)
+            text[1]['text'] = f'{temp_voltage} mS/cm'
+            connection_text = 'Connected' if SaniTrend.isConnected else 'Disconnected'
+            text[2]['text'] = connection_text
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
             
             draw.text((x, top + 0), text[text_item]['title'], font=font, fill=255)
