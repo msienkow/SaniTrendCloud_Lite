@@ -61,10 +61,9 @@ bottom = height - padding
 # Move left to right keeping track of the current x position for drawing shapes.
 x = 0
 
-
 # Load default font.
-font = ImageFont.load_default()
-# font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 10)
+# font = ImageFont.load_default()
+font = ImageFont.truetype('/usr/share/fonts/truetype/piboto/Piboto-Bold.ttf', 9)
 
 def main():
     
