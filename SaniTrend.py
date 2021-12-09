@@ -118,6 +118,7 @@ def main():
             
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
             draw.text((x, top + 0), temp_text, font=font, fill=255)
+            draw.text((x, top + 16), voltage_text, font=font, fill=255)
             # draw.text((x, top + 8), voltage_text, font=font, fill=255)
             # draw.text((x, top + 16), value_text, font=font, fill=255)
             # draw.text((x, top + 25), connection_text, font=font, fill=255)
