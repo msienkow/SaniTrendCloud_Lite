@@ -109,15 +109,13 @@ def main():
                 PLC.open()
 
             led.value = 0
-            time.sleep(SaniTrend.PLCScanRate * 0.001)
+
             temp_text = f'Temp: {value}°F'
-            voltage_text = f'Voltage: {chan.voltage}VDC'
+            temp_voltage = round(chan.voltage, 2)
+            voltage_text = f'Voltage: {temp_voltage}VDC'
             value_text = f'Value: {chan.value}'
-            connection_text = ''
-            if SaniTrend.isConnected:
-                connection_text = f'SaniTrend Connected to Cloud'
-            else:
-                connection_text = f'SaniTrend Disconnected'
+            connection_text = 'SaniTrend Connected' if SaniTrend.isConnected else 'SaniTrend Disconnected'
+            
             draw.rectangle((0, 0, width, height), outline=0, fill=0)
             draw.text((x, top + 0), temp_text, font=font, fill=255)
             draw.text((x, top + 8), voltage_text, font=font, fill=255)
@@ -127,7 +125,9 @@ def main():
             # Display image.
             disp.image(image)
             disp.show()
-            
+
+            time.sleep(SaniTrend.PLCScanRate * 0.001)
+                   
         except CommError:
             PLCErrorCount += 1
             print(f'Communication Error! Fail Count: {PLCErrorCount}')
