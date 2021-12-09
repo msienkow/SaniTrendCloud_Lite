@@ -23,7 +23,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create the ADC object using the I2C bus
 ads = ADS.ADS1115(i2c)
-ads.gain = 1
+ads.gain = 2/3
 # you can specify an I2C adress instead of the default 0x48
 # ads = ADS.ADS1115(i2c, address=0x49)
 
@@ -49,7 +49,7 @@ def main():
             led.value = 0.5
             # Get Connection Status For EMS
             SaniTrend.ConnectionStatus()
-            value = scale(chan.value, 4799.853515625 , 23999.267578125, 30, 230)
+            value = scale(chan.value, 4693.190104166667, 23465.95052083333, 30, 230)
             value = round(value, 2)
             
             if PLC.connected:
