@@ -63,7 +63,7 @@ x = 0
 
 # Load default font.
 # font = ImageFont.load_default()
-font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', 10)
+font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 10)
 
 def main():
     
@@ -127,9 +127,6 @@ def main():
             disp.show()
 
             time.sleep(SaniTrend.PLCScanRate * 0.001)
-
-            disp.scroll(0,20)
-            disp.show()
                    
         except CommError:
             PLCErrorCount += 1
