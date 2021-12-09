@@ -257,7 +257,7 @@ class Config:
                 self.LogErrorToFile('_SendToTwx', e)
 
     def LogErrorToFile(self, name, error):
-        errorTopDirectory = f'../ErrorLogs'
+        errorTopDirectory = f'../STCErrorLogs'
         currentDateTime = datetime.now()
         errorYear = str(currentDateTime.year)
         errorYearDirectory  = os.path.join(errorTopDirectory, errorYear)
@@ -271,8 +271,8 @@ class Config:
             except:
                 pass
 
-        day = currentDateTime.day if currentDateTime.day < 10 else f'0{currentDateTime.day}'
-        month = currentDateTime.month if currentDateTime.month < 10 else f'0{currentDateTime.month}'
+        month = f'_{currentDateTime.month}' if currentDateTime.month > 9 else f'_0{currentDateTime.month}'
+        day = f'_{currentDateTime.day}' if currentDateTime.day > 9 else f'_0{currentDateTime.day}'
         errorLog = f'STC_Errors_{datetime.now().year}{month}{day}.log'
         writePath = os.path.join(errorMonthDirectory, errorLog)
         mode = 'a+' if os.path.exists(writePath) else 'w+'
