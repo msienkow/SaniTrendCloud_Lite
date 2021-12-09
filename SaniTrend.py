@@ -63,7 +63,7 @@ x = 0
 
 # Load default font.
 # font = ImageFont.load_default()
-font = ImageFont.truetype('/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf', 9)
+font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', 9)
 
 def main():
     
