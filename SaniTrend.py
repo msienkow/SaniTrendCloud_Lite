@@ -22,7 +22,7 @@ def scale(Input, Input_Min, Input_Max, Scaled_Min, Scaled_Max):
 i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create the ADC object using the I2C bus
-ads = ADS.ADS1115(i2c)
+ads = ADS.ADS1115(i2c, address=0x49)
 ads.gain = 1
 # you can specify an I2C adress instead of the default 0x48
 # ads = ADS.ADS1115(i2c, address=0x49)
