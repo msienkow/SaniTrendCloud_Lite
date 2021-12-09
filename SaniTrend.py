@@ -122,8 +122,8 @@ def main():
             # draw.text((x, top + 8), voltage_text, font=font, fill=255)
             # draw.text((x, top + 16), value_text, font=font, fill=255)
             # draw.text((x, top + 25), connection_text, font=font, fill=255)
-            draw.text((x, top + 16), voltage_text, font=font, fill=255)
-            draw.text((x, top + 25), connection_text, font=font, fill=255)
+            draw.text((x, top + 12), voltage_text, font=font, fill=255)
+            draw.text((x, top + 24), connection_text, font=font, fill=255)
 
             # Display image.
             disp.image(image)
