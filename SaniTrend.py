@@ -90,7 +90,7 @@ def main():
     ]
 
     text_items = len(text)
-    disp_time = 2
+    disp_time = 2.5
     text_item = 0
     lastDisplayUpdate = time.perf_counter()
     
