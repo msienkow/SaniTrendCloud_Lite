@@ -19,6 +19,14 @@ def scale(Input, Input_Min, Input_Max, Scaled_Min, Scaled_Max):
     output = (slope * Input) + offset
     return output
 
+def ADSInputScale(Input, Resistor, Scaled_Min, Scaled_Max):
+    Input_Min = ((0.004 * Resistor) / 4.096) * 32767
+    Input_Max = ((0.02 * Resistor) / 4.096) * 32767
+    slope = (Scaled_Max - Scaled_Min) / (Input_Max - Input_Min)
+    offset = Scaled_Min - (Input_Min * slope)
+    output = (slope * Input) + offset
+    return output
+
 
 # Create the I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -99,10 +107,8 @@ def main():
     while runCode:
         try:          
             led.value = 0.5
-            
-            min = 4799.853515625
-            max = 23999.267578125
-            value = scale(chan.value, min, max, 30, 230)
+
+            value = ADSInputScale(chan.value, 149.5, 30, 320)
             value = round(value, 2)
            
             # Get Connection Status For EMS
