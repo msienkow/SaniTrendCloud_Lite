@@ -108,7 +108,7 @@ def main():
         try:          
             led.value = 0.5
 
-            value = ADSInputScale(chan.value, 149.5, 30, 230)
+            value = ADSInputScale(chan.value, 148, 30, 230)
             value = round(value, 2)
            
             # Get Connection Status For EMS
