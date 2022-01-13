@@ -196,9 +196,8 @@ class SaniTrend:
         thingworx_json = {
             'values' : values
         }
+        
         try:
-                
-
             serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
             if serviceResult.status_code == 200:
                 try:
