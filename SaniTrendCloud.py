@@ -12,7 +12,8 @@ from influxdb import InfluxDBClient
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud
-class Config:
+class SaniTrend:
+    '''Set up SaniTrend parameters, tags, cloud configurations, etc...'''
     def __init__(self, *, ConfigFile=''):
         
         self.Sim_Value = 30
@@ -22,32 +23,63 @@ class Config:
         self.Tags = []
         self.TagData = []
         self.TagTable = []
+        self.DataLog = []
+        self.TwxDataRows = []
+        self.Database = ''
         self.ServerURL = ''
         self.SMINumber = ''
         self.ConnectionStatusTime= 2
         self.isConnected = False
+        self._PLC_Last_Scan = 0
         self._ConnectionStatusRunning = False
         self._LastStatusUpdate = 0
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
+        self._TwxTimerSP = 2000
+        self._SendingToTwx = False
+        self._DatalogTimerSP = 5000
         self._OS = platform.system()
-        self._Influx_Last_Write = time.perf_counter()  
-        self._Influx_Log_Buffer = []
-        self._InfluxDB = ""
-        self._InfluxPort = 0
-        self._InfluxUser = ""
-        self._InfluxPW = ""
-        self.InfluxClient = {}
-        self._InfluxTimerSP  = 1
-        self._TwxTimerSP = 2
-        self._Twx_Last_Write = time.perf_counter()
         self._HttpHeaders = {
             'Connection': 'keep-alive',
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
+        self.TwxDataShape = {
+            'fieldDefinitions': {
+                'name': {
+                    'name': 'name',
+                    'aspects': {
+                        'isPrimaryKey': True
+                    },
+                'description': 'Property name',
+                'baseType': 'STRING',
+                'ordinal': 0
+                },
+                'time': {
+                    'name': 'time',
+                    'aspects': {},
+                    'description': 'time',
+                    'baseType': 'DATETIME',
+                    'ordinal': 0
+                },
+                'value': {
+                    'name': 'value',
+                    'aspects': {},
+                    'description': 'value',
+                    'baseType': 'VARIANT',
+                    'ordinal': 0
+                },
+                'quality': {
+                    'name': 'quality',
+                    'aspects': {},
+                    'description': 'quality',
+                    'baseType': 'STRING',
+                    'ordinal': 0
+                }
+            }
+        }
+        # Get Configuration Data From JSON File
         self.LoadConfig(ConfigFile=ConfigFile)
-
 
 
     # Read in configuration file and set values on object
@@ -58,23 +90,28 @@ class Config:
             self.PLCScanRate = int(self._configData['Config']['PLCScanRate'])
             self.SMINumber = self._configData['Config']['SMINumber']
             self.ServerURL = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/'
-            self._InfluxDB = self._configData['Config']['InfluxDB']
-            self._InfluxPort = int(self._configData['Config']['InfluxPort'])
-            self._InfluxUser = self._configData['Config']['InfluxUser']
-            self._InfluxPW = self._configData['Config']['InfluxPW']
-            self._InfluxTimerSP  = int(self._configData['Config']['InfluxTimerSP']) * 0.001
             self._TwxTimerSP = int(self._configData['Config']['TwxTimerSP']) * 0.001
-            
-            self.InfluxClient = InfluxDBClient('localhost', self._InfluxPort, self._InfluxUser, self._InfluxPW, self._InfluxDB)
-            self.InfluxClient.switch_database(self._InfluxDB)
+            self.Database = self._configData['Config']['Database']
+            self._DatalogTimerSP = int(self._configData['Config']['DatalogTimerSP']) * 0.001
             self.TagTable = self._configData['Tags']
             for dict in self.TagTable:
                 self.Tags.append(dict['tag'])
 
         return self
 
+    def PLCScanTimerDN(self):
+        '''Get difference between current ms time and last plc scan ms time and check if it is greater than the setpoint'''
+        current_mils = self.GetTimeMS()
+        if (current_mils - self._PLC_Last_Scan) > self.PLCScanRate:
+            self._PLC_Last_Scan = current_mils
+            return True
+        else:
+            return False
+
+
     # Get specific tag value from globally returned tag list from PLC through pycomm3
     def GetTagValue(self, *, TagName=''):
+        '''Get specific tag value from globally returned tag list from PLC through pycomm3'''
         if self.TagData and TagName:
             values = (item.value for item in self.TagData if item[0] == TagName)
             for i in values:
@@ -87,11 +124,16 @@ class Config:
     #      endTime = ObjectName.GetTimeMS()
     #      totalTimeDifferenceInMilliseconds = (endTime - startTime)
     def GetTimeMS(self,):
+        '''Simple function to get current time in milliseconds. Useful for time comparisons
+           ex.  startTime = ObjectName.GetTimeMS()
+           endTime = ObjectName.GetTimeMS()
+           totalTimeDifferenceInMilliseconds = (endTime - startTime)'''
         return round(time.time() * 1000)
 
 
     # Function to check for connection status to Thingworx platform based upon time interval.
     def ConnectionStatus(self):
+        '''Check if Thingworx Edge Microserver is connected to Thingworx Cloud Platform. Updates isConnected parameter of class object'''
         timerPreset = self.ConnectionStatusTime * 1000
         if (((self.GetTimeMS() - self._LastStatusUpdate) >= timerPreset) and not self._ConnectionStatusRunning):
             self._ConnectionStatusRunning = True
@@ -109,11 +151,6 @@ class Config:
             else:
                 self.LogErrorToFile('_ConnectionStatus', serviceResult)
                 self.isConnected = False
-
-            url = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/Properties/Sim_Value'
-            serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders, timeout=5)
-            if serviceResult.status_code == 200:
-                self.Sim_Value = (serviceResult.json())['rows'][0]['Sim_Value']
         
         except Exception as e:
             self.isConnected = False
@@ -123,135 +160,59 @@ class Config:
         self._ConnectionStatusRunning = False
 
 
-    # Wrapper function to call influx db data logging in a thread
+    # In-Memory Data Storage to be sent to Thingworx
     def LogData(self,):
         threading.Thread(target=self._LogData).start()
-    
-    # Influx DB Data Logging
+        
     def _LogData(self,):
-        entry = f'data '
         timestamp = self.GetTimeMS()
-
         for dict in self.TagTable:
-            tag = dict['tag']
-            tagValue = self.GetTagValue(TagName=tag)
-            value = round(tagValue, 2) if isinstance(tagValue, float) else tagValue
-            if isinstance(value, str):
-                entry += f'{tag}="{value}",'
-            else: 
-                entry += f'{tag}={value},'
-        entry += f'SentToTwx=false {timestamp}'
-        self._Influx_Log_Buffer.append(entry)
+            twx_value = {}
+            twx_tag = dict['tag']
+            twx_basetype = dict['twxtype']
+            tag_value = self.GetTagValue(TagName=twx_tag)
+            twx_tag_value = round(tag_value, 2) if isinstance(tag_value, float) else tag_value
+            twx_value['time'] = timestamp
+            twx_value['quality'] = 'GOOD'
+            twx_value['name'] = twx_tag
+            twx_value['value'] = {
+                'value' : twx_tag_value,
+                'baseType' : twx_basetype
+            }
+            self.TwxDataRows.append(twx_value)
 
-        influx_elapsed_time = time.perf_counter() - self._Influx_Last_Write
-        if influx_elapsed_time > self._InfluxTimerSP: 
-            self._Influx_Last_Write = time.perf_counter()
-            try: 
-                self.InfluxClient.write_points(self._Influx_Log_Buffer, database='sanitrend', time_precision='ms', protocol='line')
-            except Exception as e:
-                self.LogErrorToFile('_LogData', e)
-            self._Influx_Log_Buffer = []
+        if (timestamp - self._Twx_Last_Write) > self._TwxTimerSP and self.isConnected:
+            self._Twx_Last_Write = timestamp
+            twx_data = self.TwxDataRows.copy()
+            response_code = self.SendToTwx(twx_data)
+            self.TwxDataRows = []
 
-        twx_elapsed_time = time.perf_counter() - self._Twx_Last_Write
-        if twx_elapsed_time > self._TwxTimerSP and self.isConnected:
-            self._Twx_Last_Write = time.perf_counter()
-            threading.Thread(target=self._SendToTwx).start()
-            
+    # Wrapper function to send data to Thingworx
+    def SendToTwx(self,ThingworxData: list) -> int:
+        url = f'{self.ServerURL}Services/UpdatePropertyValues'
+        values = {}
+        values['rows'] = ThingworxData
+        values['dataShape'] = self.TwxDataShape
 
-    # Query Influx database and send unsent data to Thingworx
-    def _SendToTwx(self,):
-        influx_update = []
-        try:
-            query = self.InfluxClient.query('select * from data where SentToTwx = false limit 256')
-
-            if query:
-                url = f'{self.ServerURL}Services/UpdatePropertyValues'
-                values = {}
-                rows = []
-                dataShape = {
-                    'fieldDefinitions': {
-                        'name': {
-                            'name': 'name',
-                            'aspects': {
-                                'isPrimaryKey': True
-                            },
-                        'description': 'Property name',
-                        'baseType': 'STRING',
-                        'ordinal': 0
-                        },
-                        'time': {
-                            'name': 'time',
-                            'aspects': {},
-                            'description': 'time',
-                            'baseType': 'DATETIME',
-                            'ordinal': 0
-                        },
-                        'value': {
-                            'name': 'value',
-                            'aspects': {},
-                            'description': 'value',
-                            'baseType': 'VARIANT',
-                            'ordinal': 0
-                        },
-                        'quality': {
-                            'name': 'quality',
-                            'aspects': {},
-                            'description': 'quality',
-                            'baseType': 'STRING',
-                            'ordinal': 0
-                        }
-                    }
+            try:
+                thingworx_json = {
+                    'values' : values
                 }
 
-                for row in query:
-                    for dict in row:
-                        entry = f'data '
-                        timestamp = dict['time'] 
-                        for key,value in dict.items():
-                            twxvalue = {}
-                            twxvalue['time'] = timestamp
-                            twxvalue['quality'] = 'GOOD'
-                            if key != 'time' and key != 'SentToTwx':
-                                twxvalue['name'] = key
-                                twxtypes = (item['twxtype'] for item in self.TagTable if item['tag'] == key)
-                                for i in twxtypes:
-                                    baseType = i
-                                twxvalue['value'] = {
-                                    'value' : value,
-                                    'baseType' : baseType
-                                }
+                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
+                if serviceResult.status_code == 200:
+                    try:
+                        pass
+                        # self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
+                        self.TwxDataRows = []
+                    except Exception as e:
+                        pass
+                        # self.LogErrorToFile('Update Influx Data Failed!', 'Change me to "e" to gather exception.')
+                else:
+                    self.LogErrorToFile('_SendToTwx', serviceResult)
 
-                                rows.append(twxvalue)
-
-                                value = round(value, 2) if isinstance(value, float) else value
-                                if isinstance(value, str):
-                                    entry += f'{key}="{value}",'
-                                else: 
-                                    entry += f'{key}={value},'
-                        parsed_time = dateutil.parser.parse(timestamp)
-                        milliseconds = int(parsed_time.timestamp() * 1000)
-                        entry += f'SentToTwx=true {milliseconds}'
-                        influx_update.append(entry)
-
-                    values['rows'] = rows
-                    values['dataShape'] = dataShape
-
-                try:
-                    thingworx_json = {
-                        'values' : values
-                    }
-
-                    serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
-                    if serviceResult.status_code == 200:
-                        try:
-                            self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
-                        except Exception as e:
-                            self.LogErrorToFile('Update Influx Data Failed!', 'Change me to "e" to gather exception.')
-                    else:
-                        self.LogErrorToFile('_SendToTwx', serviceResult)
-
-                except Exception as e:
-                    self.LogErrorToFile('_SendToTwx', e)
+            except Exception as e:
+                self.LogErrorToFile('_SendToTwx', e)
                       
         except Exception as e:
                 self.LogErrorToFile('_SendToTwx', e)
