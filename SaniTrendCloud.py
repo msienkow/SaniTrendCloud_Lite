@@ -193,29 +193,27 @@ class SaniTrend:
         values = {}
         values['rows'] = ThingworxData
         values['dataShape'] = self.TwxDataShape
+        thingworx_json = {
+            'values' : values
+        }
+        try:
+                
 
-            try:
-                thingworx_json = {
-                    'values' : values
-                }
+            serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
+            if serviceResult.status_code == 200:
+                try:
+                    pass
+                    # self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
+                    self.TwxDataRows = []
+                except Exception as e:
+                    pass
+                    # self.LogErrorToFile('Update Influx Data Failed!', 'Change me to "e" to gather exception.')
+            else:
+                self.LogErrorToFile('_SendToTwx', serviceResult)
 
-                serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
-                if serviceResult.status_code == 200:
-                    try:
-                        pass
-                        # self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
-                        self.TwxDataRows = []
-                    except Exception as e:
-                        pass
-                        # self.LogErrorToFile('Update Influx Data Failed!', 'Change me to "e" to gather exception.')
-                else:
-                    self.LogErrorToFile('_SendToTwx', serviceResult)
-
-            except Exception as e:
-                self.LogErrorToFile('_SendToTwx', e)
-                      
         except Exception as e:
-                self.LogErrorToFile('_SendToTwx', e)
+            self.LogErrorToFile('_SendToTwx', e)
+       
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'../STCErrorLogs'
