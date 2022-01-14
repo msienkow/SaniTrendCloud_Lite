@@ -1,4 +1,3 @@
-from asyncio.constants import LOG_THRESHOLD_FOR_CONNLOST_WRITES
 import platform
 import json
 from pycomm3.exceptions import CommError
