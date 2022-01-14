@@ -53,7 +53,7 @@ def main():
             print('Shutting Down...')
             PLC.close()
             SaniTrend.LogErrorToFile('Final Exception', error)
-            runCode = False
+            # runCode = False
 
 if __name__ == "__main__":
     main()
