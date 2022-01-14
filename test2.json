@@ -3,8 +3,6 @@
         "PLCIPAddress": "10.10.135.173",
         "PLCScanRate" : "1000",
         "SMINumber": "test.thing.123",
-        "Database" : "C:\\sanitrend.db",
-        "DatalogTimerSP" : "5000",
         "TwxTimerSP" : "2000"
     },
     "Tags": [

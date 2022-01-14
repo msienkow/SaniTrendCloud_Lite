@@ -1,3 +1,4 @@
+from asyncio.constants import LOG_THRESHOLD_FOR_CONNLOST_WRITES
 import platform
 import json
 from pycomm3.exceptions import CommError
@@ -7,8 +8,6 @@ from datetime import datetime
 from requests.models import HTTPError
 import requests
 import os
-import dateutil.parser
-from influxdb import InfluxDBClient
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud
@@ -23,9 +22,8 @@ class SaniTrend:
         self.Tags = []
         self.TagData = []
         self.TagTable = []
-        self.DataLog = []
         self.TwxDataRows = []
-        self.Database = ''
+        self.Logging = False
         self.ServerURL = ''
         self.SMINumber = ''
         self.ConnectionStatusTime= 2
@@ -36,7 +34,6 @@ class SaniTrend:
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
         self._TwxTimerSP = 2000
-        self._SendingToTwx = False
         self._DatalogTimerSP = 5000
         self._OS = platform.system()
         self._HttpHeaders = {
@@ -91,8 +88,8 @@ class SaniTrend:
             self.SMINumber = self._configData['Config']['SMINumber']
             self.ServerURL = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/'
             self._TwxTimerSP = int(self._configData['Config']['TwxTimerSP']) * 0.001
-            self.Database = self._configData['Config']['Database']
-            self._DatalogTimerSP = int(self._configData['Config']['DatalogTimerSP']) * 0.001
+            # self.Database = self._configData['Config']['Database']
+            # self._DatalogTimerSP = int(self._configData['Config']['DatalogTimerSP']) * 0.001
             self.TagTable = self._configData['Tags']
             for dict in self.TagTable:
                 self.Tags.append(dict['tag'])
@@ -124,7 +121,7 @@ class SaniTrend:
     #      endTime = ObjectName.GetTimeMS()
     #      totalTimeDifferenceInMilliseconds = (endTime - startTime)
     def GetTimeMS(self,):
-        '''Simple function to get current time in milliseconds. Useful for time comparisons
+        '''Simple function to get current time in milliseconds. Useful for time comparisons\n
            ex.  startTime = ObjectName.GetTimeMS()
            endTime = ObjectName.GetTimeMS()
            totalTimeDifferenceInMilliseconds = (endTime - startTime)'''
@@ -162,9 +159,6 @@ class SaniTrend:
 
     # In-Memory Data Storage to be sent to Thingworx
     def LogData(self,):
-        threading.Thread(target=self._LogData).start()
-        
-    def _LogData(self,):
         timestamp = self.GetTimeMS()
         for dict in self.TagTable:
             twx_value = {}
@@ -180,15 +174,35 @@ class SaniTrend:
                 'baseType' : twx_basetype
             }
             self.TwxDataRows.append(twx_value)
+        
 
-        if (timestamp - self._Twx_Last_Write) > self._TwxTimerSP and self.isConnected:
-            self._Twx_Last_Write = timestamp
+    def SendDataToTwx(self,):
+        timestamp = self.GetTimeMS()
+        if (timestamp - self._Twx_Last_Write) > self._TwxTimerSP and not self.Logging:
             twx_data = self.TwxDataRows.copy()
-            response_code = self.SendToTwx(twx_data)
             self.TwxDataRows = []
+            self._Twx_Last_Write = timestamp
+
+            if self.isConnected:
+                threading.Thread(target=self._SendDataToTwx, args=(twx_data,)).start()
+            
+            elif not self.isConnected:
+                self.Logging = True
+                threading.Thread(target=self._LogThingworxData, args=(twx_data,)).start()
+
+        return None
 
     # Wrapper function to send data to Thingworx
-    def SendToTwx(self,ThingworxData: list) -> int:
+    def _SendDataToTwx(self, ThingworxData: list):
+        response = self._LogThingworxData(ThingworxData)
+ 
+        if response != 200:
+            self.LogDataToFile(ThingworxData)
+
+        return None
+
+    # Function to send data to Thingworx
+    def _LogThingworxData(self,ThingworxData: list) -> int:
         url = f'{self.ServerURL}Services/UpdatePropertyValues'
         values = {}
         values['rows'] = ThingworxData
@@ -196,26 +210,41 @@ class SaniTrend:
         thingworx_json = {
             'values' : values
         }
+        status_code = 0
         
         try:
-            serviceResult = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
-            if serviceResult.status_code == 200:
-                try:
-                    pass
-                    # self.InfluxClient.write_points(influx_update, database='sanitrend', time_precision='ms', protocol='line')
-                    self.TwxDataRows = []
-                except Exception as e:
-                    pass
-                    # self.LogErrorToFile('Update Influx Data Failed!', 'Change me to "e" to gather exception.')
+            http_response = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
+            if http_response.status_code == 200:
+               status_code = http_response.status_code
+
             else:
-                self.LogErrorToFile('_SendToTwx', serviceResult)
+                self.LogErrorToFile('_LogThingworxData', http_response)
+                status_code =  http_response.status_code
 
         except Exception as e:
             self.LogErrorToFile('_SendToTwx', e)
+        
+        return status_code
        
+    def LogDataToFile(self, data: list):
+        self.Logging = True
+        logfile = "TwxData.log"
+        mode = 'a+' if os.path.exists(logfile) else 'w+'
+        try:
+            with open(logfile, mode) as file:
+                file.write(f'{data}\n')
+                print(f'{data}\n')
+
+        except Exception as e:
+            self.LogErrorToFile('LogDataToFile', e)
+
+        self.Logging = False
+        return None
+
+
 
     def LogErrorToFile(self, name, error):
-        errorTopDirectory = f'../STCErrorLogs'
+        errorTopDirectory = f'STCErrorLogs'
         currentDateTime = datetime.now()
         errorYear = str(currentDateTime.year)
         errorYearDirectory  = os.path.join(errorTopDirectory, errorYear)
