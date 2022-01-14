@@ -27,7 +27,7 @@ class SaniTrend:
         self.Logging = False
         self.ServerURL = ''
         self.SMINumber = ''
-        self.ConnectionStatusTime= 2
+        self.ConnectionStatusTime = 2
         self.isConnected = False
         self._PLC_Last_Scan = 0
         self._ConnectionStatusRunning = False
@@ -138,6 +138,8 @@ class SaniTrend:
             self._ConnectionStatusRunning = True
             self._LastStatusUpdate = self.GetTimeMS()
             threading.Thread(target=self._ConnectionStatus).start()
+
+        return None
 
     #Run REST request against EMS to see if it is connected to the Thingworx platform
     def _ConnectionStatus(self,):
