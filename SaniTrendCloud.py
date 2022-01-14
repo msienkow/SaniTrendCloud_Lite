@@ -31,6 +31,7 @@ class SaniTrend:
         self._PLC_Last_Scan = 0
         self._ConnectionStatusRunning = False
         self._Twx_Last_Write = 0
+        self._LastStatusUpdate = 0
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
         self._TwxTimerSP = 2000
