@@ -176,6 +176,8 @@ class SaniTrend:
 
             twx_value['time'] = timestamp
             twx_value['quality'] = 'GOOD'
+            if twx_tag_value == -9999:
+                twx_value['quality'] = 'BAD'
             twx_value['name'] = twx_tag
             twx_value['value'] = {
                 'value' : twx_tag_value,

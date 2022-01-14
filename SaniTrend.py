@@ -27,6 +27,8 @@ def main():
                     
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
+
+                    # Send in-memory data to Thingworx
                     SaniTrend.SendDataToTwx()
                     PLCErrorCount = 0
 
