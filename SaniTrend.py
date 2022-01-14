@@ -27,6 +27,7 @@ def main():
                     
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
+                    SaniTrend.SendDataToTwx()
                     PLCErrorCount = 0
 
             else:
