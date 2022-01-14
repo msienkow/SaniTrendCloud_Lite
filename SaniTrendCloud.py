@@ -217,7 +217,6 @@ class SaniTrend:
             'values' : values
         }
         status_code = 0
-        print(thingworx_json)
         
         try:
             http_response = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
