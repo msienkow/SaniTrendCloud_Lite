@@ -168,9 +168,9 @@ class SaniTrend:
             tag_value = self.GetTagValue(TagName=twx_tag)
             twx_tag_value = round(tag_value, 2) if isinstance(tag_value, float) else tag_value
             
-            if (twx_basetype == 'NUMBER' and isinstance(twx_tag_value), str):
+            if (twx_basetype == 'NUMBER' and isinstance(twx_tag_value, str)):
                 twx_tag_value = 9999
-                
+
             twx_value['time'] = timestamp
             twx_value['quality'] = 'GOOD'
             twx_value['name'] = twx_tag
