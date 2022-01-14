@@ -14,9 +14,6 @@ import math
 class SaniTrend:
     '''Set up SaniTrend parameters, tags, cloud configurations, etc...'''
     def __init__(self, *, ConfigFile=''):
-        
-        self.Sim_Value = 30
-        
         self.PLCIPAddress = ''
         self.PLCScanRate = 1000
         self.Tags = []
