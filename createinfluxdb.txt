@@ -1,1 +1,0 @@
-create database "sanitrend" with duration 180d replication 1 shard duration 1d name "sanitrend"
