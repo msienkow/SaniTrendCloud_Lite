@@ -8,6 +8,7 @@ from requests.models import HTTPError
 import requests
 import os
 import math
+import ast
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud
@@ -33,6 +34,7 @@ class SaniTrend:
         self._ThingworxSession = requests.Session()
         self._TwxTimerSP = 2000
         self._DatalogTimerSP = 5000
+        self._LastDataLogCheck = 0
         self._OS = platform.system()
         self._HttpHeaders = {
             'Connection': 'keep-alive',
@@ -248,6 +250,33 @@ class SaniTrend:
         return None
 
 
+
+    # Send unsent data to Thingworx
+    def ForwardStoredData(self,):
+        if self.isConnected:
+            timestamp = self.GetTimeMS()
+            if (timestamp - self._LastDataLogCheck) > self._DatalogTimerSP and not self.Logging:
+                self.Logging = True
+            
+
+
+    # Threaded function to send data to Thingworx                        
+    def _ForwardStoredData(self,):
+        logfile = "TwxData.log"
+        logexists = os.path.exists(logfile)
+        rows = []
+
+        if logexists:
+            with open(logfile, "r+") as file:
+                num_lines = sum(1 for line in file)
+                if num_lines < 1024:
+                    lines = file.readlines()
+                    for line in lines:
+                        row = line.strip()
+                        
+                else:
+                    for i in range(1024):
+                        pass                                   
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'STCErrorLogs'
