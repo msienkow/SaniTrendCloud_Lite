@@ -8,6 +8,7 @@ from datetime import datetime
 from requests.models import HTTPError
 import requests
 import os
+import math
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud
@@ -168,8 +169,8 @@ class SaniTrend:
             tag_value = self.GetTagValue(TagName=twx_tag)
             twx_tag_value = round(tag_value, 2) if isinstance(tag_value, float) else tag_value
             
-            if (twx_basetype == 'NUMBER' and isinstance(twx_tag_value, str)):
-                twx_tag_value = 9999
+            if (twx_basetype == 'NUMBER' and math.isinf(twx_tag_value)):
+                twx_tag_value = -9999
 
             twx_value['time'] = timestamp
             twx_value['quality'] = 'GOOD'
