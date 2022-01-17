@@ -253,10 +253,14 @@ class SaniTrend:
 
     # Send unsent data to Thingworx
     def ForwardStoredData(self,):
-        if self.isConnected:
-            timestamp = self.GetTimeMS()
-            if (timestamp - self._LastDataLogCheck) > self._DatalogTimerSP and not self.Logging:
-                self.Logging = True
+        timestamp = self.GetTimeMS()
+        if (timestamp - self._LastDataLogCheck) > self._DatalogTimerSP and not self.Logging:
+            self.Logging = True
+            if self.isConnected:
+                pass
+
+            self._LastDataLogCheck = timestamp
+
             
 
 
