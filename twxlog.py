@@ -43,9 +43,9 @@ with open("TwxData.log", "r+") as file:
         print(twx_data)
         print(result)
         if result == 200:
-            file.seek(0)
-            for _ in range(64):
-                file.write("")
+            # file.seek(0)
+            # for _ in range(64):
+            #     file.write("")
             file.truncate()
 
     
