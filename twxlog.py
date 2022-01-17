@@ -18,7 +18,7 @@ with open("TwxData.log", "r+") as file:
         for line in lines:
             data = ast.literal_eval(line.strip())
             for item in data:
-                twx_data.append()
+                twx_data.append(item)
             
         result = SaniTrend._LogThingworxData(twx_data)
         print(twx_data)
