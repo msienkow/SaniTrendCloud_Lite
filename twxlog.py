@@ -14,21 +14,23 @@ with open("TwxData.log", "r+") as file:
     file.seek(0)
     start_time = time.perf_counter()
     if num_lines < 64:
-        twx_data = []
-        lines = file.readlines()
-        for line in lines:
-            data = ast.literal_eval(line.strip())
-            for item in data:
-                twx_data.append(item)
+        pass
+        print("P A S S")
+        # twx_data = []
+        # lines = file.readlines()
+        # for line in lines:
+        #     data = ast.literal_eval(line.strip())
+        #     for item in data:
+        #         twx_data.append(item)
             
-        result = SaniTrend._LogThingworxData(twx_data)
+        # result = SaniTrend._LogThingworxData(twx_data)
         
-        print(result)
-        if result == 200:
-            file.seek(0)
-            for _ in range(num_lines):
-                file.write("")
-            file.truncate()
+        # print(result)
+        # if result == 200:
+        #     file.seek(0)
+        #     for _ in range(num_lines):
+        #         file.write("")
+        #     file.truncate()
     else:
         twx_data = []
         for _ in range(64):
