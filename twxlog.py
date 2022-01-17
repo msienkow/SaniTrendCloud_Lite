@@ -36,6 +36,7 @@ with open("TwxData.log", "r+") as file:
                 twx_data.append(dict)
 
         result = SaniTrend._LogThingworxData(twx_data)
+        print(twx_data)
         print(result)
         if result == 200:
             file.seek(0)
