@@ -10,6 +10,7 @@ num_lines = 0
 
 with open("TwxData.log", "r+") as file:
     num_lines = sum(1 for _ in file)
+    print(f'{num_lines} lines -----------')
     file.seek(0)
     start_time = time.perf_counter()
     if num_lines < 64:
