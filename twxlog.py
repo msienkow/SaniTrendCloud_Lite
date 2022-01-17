@@ -32,7 +32,7 @@ with open("TwxData.log", "r+") as file:
         twx_data = []
         for _ in range(64):
             line = file.readline()
-            data = ast.literal_eval(line.line.strip())
+            data = ast.literal_eval(line.strip())
             for dict in data:
                 twx_data.append(dict)
 
