@@ -12,7 +12,7 @@ with open("TwxData.log", "r+") as file:
     num_lines = sum(1 for _ in file)
     file.seek(0)
     start_time = time.perf_counter()
-    if num_lines < 128:
+    if num_lines < 64:
         twx_data = []
         lines = file.readlines()
         for line in lines:
@@ -21,16 +21,29 @@ with open("TwxData.log", "r+") as file:
                 twx_data.append(item)
             
         result = SaniTrend._LogThingworxData(twx_data)
-        print(twx_data)
+        
         print(result)
+        if result == 200:
+            file.seek(0)
+            for _ in file:
+                file.write("")
+            file.truncate()
+    else:
+        twx_data = []
+        for _ in range(64):
+            log_entry = file.readline().strip()
+            for dict in log_entry:
+                twx_data.append(dict)
 
-        # for line in file:
-        #             data = ast.literal_eval(line.strip())
-                
-        #         end_time = time.perf_counter()
-        # total_time += end_time - start_time
-        # print(result)
+        result = SaniTrend._LogThingworxData(twx_data)
+        print(result)
+        if result == 200:
+            file.seek(0)
+            for _ in range(64):
+                file.write("")
+            file.truncate()
+
     
     end_time = time.perf_counter()
     total_time = end_time - start_time
-    print(f'{total_time} seconds for {num_lines} lines')
+    print(f'{total_time} seconds for 64 lines')
