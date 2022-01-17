@@ -22,4 +22,4 @@ with open("TwxData.log", "r") as file:
         print(result)
     
     avg_time = total_time / num_lines
-    print(avg_time)
+    print(f'{avg_time} seconds for {num_lines} lines')
