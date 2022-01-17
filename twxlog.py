@@ -25,7 +25,7 @@ with open("TwxData.log", "r+") as file:
         print(result)
         if result == 200:
             file.seek(0)
-            for _ in num_lines:
+            for i in num_lines:
                 file.write("")
             file.truncate()
     else:
