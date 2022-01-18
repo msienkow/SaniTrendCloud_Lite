@@ -1,9 +1,8 @@
 import SaniTrendCloud
 import ast
 import time
-# this is a comment
 
-
+# test
 
 
 SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
