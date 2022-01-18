@@ -2,11 +2,6 @@ import SaniTrendCloud
 import ast
 import time
 
-# test
-
-# test123
-
-
 SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
 
 num_lines = 0
