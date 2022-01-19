@@ -8,7 +8,7 @@ SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
 
 count = 0
 
-with open("TwxData.log", "r+") as file:
+with open("TwxData.log", "w+") as file:
     lines = file.readlines()
     print(len(lines))
     file.seek(0)
@@ -24,7 +24,7 @@ with open("TwxData.log", "r+") as file:
 
         if result == 200:
             count = count + 1
-            file.write("gotcha")
+            file.write("gotcha\n")
             print(result)
 
         elif result != 200:
