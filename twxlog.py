@@ -32,4 +32,5 @@ with open("TwxData.log", "r+") as file:
                 print("failed")
     print(count)
     if clear_file:
-        file.truncate(0)
+        # file.truncate(0)
+        pass
