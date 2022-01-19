@@ -19,7 +19,7 @@ with open("TwxData.log", "r+") as file:
         
         for item in data:
             twx_data.append(item)
-        file.wrtie
+
         result = SaniTrend._LogThingworxData(twx_data)
 
         if result == 200:
