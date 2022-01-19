@@ -10,7 +10,7 @@ num_lines = 0
 
 
 
-with open("TwxData.log", "w+") as file:
+with open("TwxData.log", "r+") as file:
     lines = file.readlines()
     print(len(lines))
     file.seek(0)
