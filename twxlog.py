@@ -11,6 +11,7 @@ num_lines = 0
 
 with open("TwxData.log", "r+") as file:
     clear_file = True
+    count = 0
     for _ in file:
         twx_data = []
         line = file.readline()
@@ -23,10 +24,12 @@ with open("TwxData.log", "r+") as file:
             result = SaniTrend._LogThingworxData(twx_data)
             if result == 200:
                 file.write("\n")
+                count = count + 1
                 print(result)
 
             elif result != 200 and clear_file:
                 clear_file = False
-    
+                print("failed")
+    print(count)
     if clear_file:
         file.truncate(0)
