@@ -8,7 +8,7 @@ SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
 
 count = 0
 
-with open("TwxData.log", "w+") as file:
+with open("TwxData.log", "r+") as file:
     lines = file.readlines()
     print(len(lines))
     file.seek(0)
@@ -19,7 +19,7 @@ with open("TwxData.log", "w+") as file:
         
         for item in data:
             twx_data.append(item)
-        
+        file.wrtie
         result = SaniTrend._LogThingworxData(twx_data)
 
         if result == 200:
