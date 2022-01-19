@@ -12,6 +12,7 @@ num_lines = 0
 with open("TwxData.log", "r+") as file:
     clear_file = True
     count = 0
+    file.seek(0)
     for _ in file:
         twx_data = []
         line = file.readline().strip()
