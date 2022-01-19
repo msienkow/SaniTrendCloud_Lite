@@ -46,11 +46,9 @@ with open("TwxData.log", "r+") as file:
         print(twx_data)
         print(result)
         if result == 200:
-            line_number = num_lines
-            for i in range(64):
-                line_number = num_lines - i
-                file.seek(line_number)
-                file.write("")
+            line_number = num_lines - 64
+            file.truncate()
+            
 
     
     end_time = time.perf_counter()
