@@ -14,16 +14,16 @@ with open("TwxData.log", "r+") as file:
     count = 0
     for _ in file:
         twx_data = []
-        line = file.readline()
-        if line != "\n":
-            data = ast.literal_eval(line.strip())
+        line = file.readline().strip()
+        if line != "pass":
+            data = ast.literal_eval(line)
             
             for item in data:
                 twx_data.append(item)
             
             result = SaniTrend._LogThingworxData(twx_data)
             if result == 200:
-                file.write("\n")
+                file.write("pass")
                 count = count + 1
                 print(result)
 
