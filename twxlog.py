@@ -12,8 +12,8 @@ num_lines = 0
 
 with open("TwxData.log", "w+") as file:
     lines = file.readlines()
+    print(len(lines))
     file.seek(0)
-    file.truncate()
     for line in lines:
         twx_data = []
         message = line.strip()
