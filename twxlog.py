@@ -33,10 +33,7 @@ with open("TwxData.log", "r+") as file:
         #     file.truncate()
     else:
         twx_data = []
-        line_number = num_lines
         for i in range(64):
-            line_number = num_lines - (i - 1)
-            file.seek(line_number)
             line = file.readline()
             data = ast.literal_eval(line.strip())
             for dict in data:
@@ -45,10 +42,10 @@ with open("TwxData.log", "r+") as file:
         result = SaniTrend._LogThingworxData(twx_data)
         print(twx_data)
         print(result)
-        # if result == 200:
-        #     line_number = num_lines - 64
-        #     file.seek(line_number)
-        #     file.truncate()
+        if result == 200:
+            file.seek(0)
+            for _ in range(64):
+                file.write("\n")
             
 
     
