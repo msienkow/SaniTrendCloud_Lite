@@ -6,9 +6,7 @@ import math
 
 SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
 
-num_lines = 0
-
-
+count = 0
 
 with open("TwxData.log", "r+") as file:
     lines = file.readlines()
