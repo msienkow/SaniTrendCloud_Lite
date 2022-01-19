@@ -47,6 +47,7 @@ with open("TwxData.log", "r+") as file:
         print(result)
         if result == 200:
             line_number = num_lines - 64
+            file.seek(line_number)
             file.truncate()
             
 
