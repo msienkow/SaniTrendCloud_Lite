@@ -33,9 +33,12 @@ with open("TwxData.log", "r+") as file:
         #     file.truncate()
     else:
         twx_data = []
-        for _ in range(64):
-            line = file.readline()
-            data = ast.literal_eval(line.strip())
+        line_number = num_lines
+        for i in range(64):
+            line_number = num_lines - i
+            file.seek(line_number)
+            line = file.readline().line.strip()
+            data = ast.literal_eval()
             for dict in data:
                 twx_data.append(dict)
 
@@ -43,9 +46,11 @@ with open("TwxData.log", "r+") as file:
         print(twx_data)
         print(result)
         if result == 200:
-            file.seek(0)
-            for _ in range(64):
-                file.write("\n")
+            line_number = num_lines
+            for i in range(64):
+                line_number = num_lines - i
+                file.seek(line_number)
+                file.write("")
 
     
     end_time = time.perf_counter()
