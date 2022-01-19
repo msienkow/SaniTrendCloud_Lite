@@ -24,6 +24,7 @@ with open("TwxData.log", "r+") as file:
 
         if result == 200:
             count = count + 1
+            file.write("gotcha")
             print(result)
 
         elif result != 200:
