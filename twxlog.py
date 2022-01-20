@@ -1,8 +1,6 @@
 from email import message
 import SaniTrendCloud
 import ast
-import time
-import math
 
 SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
 
