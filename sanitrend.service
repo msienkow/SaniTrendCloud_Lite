@@ -1,0 +1,12 @@
+[Unit]
+Description=Sanitrend Cloud
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/home/pi/SaniTrendCloud_Lite
+User=pi
+ExecStart=/usr/bin/python3 /home/pi/SaniTrendCloud_Lite/SaniTrend.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -8,7 +8,6 @@ from requests.models import HTTPError
 import requests
 import os
 import math
-import ast
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud

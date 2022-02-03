@@ -1,31 +1,13 @@
-from email import message
 import SaniTrendCloud
-import ast
+import sqlite3
 
-SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
+db = sqlite3.connect('STC.db')
+cur = db.cursor()
 
-count = 0
-
-with open("TwxData.log", "r+") as file:
-    lines = file.readlines()
-    print(len(lines))
-    file.seek(0)
-    file.truncate()
-    for line in lines:
-        twx_data = []
-        message = line.strip()
-        data = ast.literal_eval(message)
-        
-        for item in data:
-            twx_data.append(item)
-
-        result = SaniTrend._LogThingworxData(twx_data)
-
-        if result == 200:
-            count = count + 1
-            file.write("gotcha\n")
-            print(result)
-
-        elif result != 200:
-            file.write(line)
-            print("failed")
+cur.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='sanitrend' ''')
+if cur.fetchone()[0] == 0:
+    cur.execute(''' CREATE TABLE sanitrend (data text, twx integer) ''')
+else:
+    print('exits')
+db.commit()
+db.close
