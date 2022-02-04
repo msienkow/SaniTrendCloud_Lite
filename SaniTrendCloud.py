@@ -8,6 +8,7 @@ from requests.models import HTTPError
 import requests
 import os
 import math
+import sqlite3
 
 # Overall Configuration Class to import that has
 # auxillary functions necesaary for the cloud
@@ -32,9 +33,9 @@ class SaniTrend:
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
         self._TwxTimerSP = 2000
-        self._DatalogTimerSP = 5000
         self._LastDataLogCheck = 0
         self._OS = platform.system()
+        self.db = os.path.join(os.path.dirname(__file__), 'stc.db')
         self._HttpHeaders = {
             'Connection': 'keep-alive',
             'Accept': 'application/json',
@@ -87,8 +88,6 @@ class SaniTrend:
             self.SMINumber = self._configData['Config']['SMINumber']
             self.ServerURL = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/'
             self._TwxTimerSP = int(self._configData['Config']['TwxTimerSP']) * 0.001
-            # self.Database = self._configData['Config']['Database']
-            # self._DatalogTimerSP = int(self._configData['Config']['DatalogTimerSP']) * 0.001
             self.TagTable = self._configData['Tags']
             for dict in self.TagTable:
                 self.Tags.append(dict['tag'])
@@ -253,7 +252,7 @@ class SaniTrend:
     # Send unsent data to Thingworx
     def ForwardStoredData(self,):
         timestamp = self.GetTimeMS()
-        if (timestamp - self._LastDataLogCheck) > self._DatalogTimerSP and not self.Logging:
+        if (timestamp - self._LastDataLogCheck) > 1 and not self.Logging:
             self.Logging = True
             if self.isConnected:
                 pass
