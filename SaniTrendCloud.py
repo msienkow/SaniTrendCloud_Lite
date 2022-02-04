@@ -32,7 +32,7 @@ class SaniTrend:
         self._LastStatusUpdate = 0
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
-        self._TwxTimerSP = 2000
+        self._TwxTimerSP = 1400
         self._LastDataLogCheck = 0
         self._OS = platform.system()
         self.db = os.path.join(os.path.dirname(__file__), 'stc.db')
@@ -164,22 +164,25 @@ class SaniTrend:
             twx_value = {}
             twx_tag = dict['tag']
             twx_basetype = dict['twxtype']
-            tag_value = self.GetTagValue(TagName=twx_tag)
-            twx_tag_value = round(tag_value, 2) if isinstance(tag_value, float) else tag_value
+            ignore_type = 'ignore'
             
-            if (twx_basetype == 'NUMBER' and math.isinf(twx_tag_value)):
-                twx_tag_value = -9999
+            if twx_basetype.lower() != ignore_type:
+                tag_value = self.GetTagValue(TagName=twx_tag)
+                twx_tag_value = round(tag_value, 2) if isinstance(tag_value, float) else tag_value
+                
+                if (twx_basetype == 'NUMBER' and math.isinf(twx_tag_value)):
+                    twx_tag_value = -9999
 
-            twx_value['time'] = timestamp
-            twx_value['quality'] = 'GOOD'
-            if twx_tag_value == -9999:
-                twx_value['quality'] = 'BAD'
-            twx_value['name'] = twx_tag
-            twx_value['value'] = {
-                'value' : twx_tag_value,
-                'baseType' : twx_basetype
-            }
-            self.TwxDataRows.append(twx_value)
+                twx_value['time'] = timestamp
+                twx_value['quality'] = 'GOOD'
+                if twx_tag_value == -9999:
+                    twx_value['quality'] = 'BAD'
+                twx_value['name'] = twx_tag
+                twx_value['value'] = {
+                    'value' : twx_tag_value,
+                    'baseType' : twx_basetype
+                }
+                self.TwxDataRows.append(twx_value)
         
 
     def SendDataToTwx(self,):
@@ -204,7 +207,8 @@ class SaniTrend:
  
         if response != 200:
             self.LogDataToFile(ThingworxData)
-
+        else:
+            self._LogThingworxData(ThingworxData)
         return None
 
     # Function to send data to Thingworx

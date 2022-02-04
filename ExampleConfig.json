@@ -3,7 +3,7 @@
         "PLCIPAddress": "10.10.135.173",
         "PLCScanRate" : "1000",
         "SMINumber": "test.thing.123",
-        "TwxTimerSP" : "2000"
+        "TwxTimerSP" : "1400"
     },
     "Tags": [
         {
@@ -21,6 +21,14 @@
         {
             "tag": "_IO_EM_AI_01",
             "twxtype": "NUMBER"
+        },
+        {
+            "tag": "Reboot",
+            "twxtype": "ignore"
+        },
+        {
+            "tag": "PLC_WD",
+            "twxtype": "ignore"
         }
     ]
 }
