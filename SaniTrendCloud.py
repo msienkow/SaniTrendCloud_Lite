@@ -28,11 +28,9 @@ class SaniTrend:
         self.isConnected = False
         self._PLC_Last_Scan = 0
         self._ConnectionStatusRunning = False
-        self._Twx_Last_Write = 0
         self._LastStatusUpdate = 0
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
-        self._TwxTimerSP = 1400
         self._LastDataLogCheck = 0
         self._OS = platform.system()
         self.db = os.path.join(os.path.dirname(__file__), 'stc.db')
@@ -87,7 +85,6 @@ class SaniTrend:
             self.PLCScanRate = int(self._configData['Config']['PLCScanRate'])
             self.SMINumber = self._configData['Config']['SMINumber']
             self.ServerURL = f'http://localhost:8000/Thingworx/Things/{self.SMINumber}/'
-            self._TwxTimerSP = int(self._configData['Config']['TwxTimerSP']) * 0.001
             self.TagTable = self._configData['Tags']
             for dict in self.TagTable:
                 self.Tags.append(dict['tag'])
@@ -175,44 +172,76 @@ class SaniTrend:
 
                 twx_value['time'] = timestamp
                 twx_value['quality'] = 'GOOD'
+
                 if twx_tag_value == -9999:
                     twx_value['quality'] = 'BAD'
+                
                 twx_value['name'] = twx_tag
                 twx_value['value'] = {
                     'value' : twx_tag_value,
                     'baseType' : twx_basetype
                 }
+                
                 self.TwxDataRows.append(twx_value)
         
 
+    # Wrapper function to send data to Thingworx
     def SendDataToTwx(self,):
-        timestamp = self.GetTimeMS()
-        if (timestamp - self._Twx_Last_Write) > self._TwxTimerSP and not self.Logging:
+        if not self.Logging:
             twx_data = self.TwxDataRows.copy()
             self.TwxDataRows = []
-            self._Twx_Last_Write = timestamp
 
             if self.isConnected:
                 threading.Thread(target=self._SendDataToTwx, args=(twx_data,)).start()
             
             elif not self.isConnected:
                 self.Logging = True
-                threading.Thread(target=self._LogThingworxData, args=(twx_data,)).start()
+                threading.Thread(target=self._SendTwxData, args=(twx_data,)).start()
 
-        return None
-
-    # Wrapper function to send data to Thingworx
-    def _SendDataToTwx(self, ThingworxData: list):
-        response = self._LogThingworxData(ThingworxData)
- 
-        if response != 200:
-            self.LogDataToFile(ThingworxData)
-        else:
-            self._LogThingworxData(ThingworxData)
         return None
 
     # Function to send data to Thingworx
-    def _LogThingworxData(self,ThingworxData: list) -> int:
+    def _SendDataToTwx(self, ThingworxData: list):
+        response = self._SendTwxData(ThingworxData)
+        if response == 200:
+            try:
+                self.Logging = True
+                select_query = '''select ROWID,TwxData,SentToTwx from sanitrend where SentToTwx = false LIMIT 32'''
+                delete_ids = []
+                SQLThingworxData = []
+                with sqlite3.connect(database=self.db) as db:
+                    cur = db.cursor()  
+                    cur.execute(select_query)  
+                    records = cur.fetchall()
+
+                    for row in records:
+                        delete_ids.append(row[0])
+                        twx_data = json.loads(row[1])
+                        for dict in twx_data:
+                            SQLThingworxData.append(dict)
+                    
+                    logged_data_response = self._SendTwxData(SQLThingworxData)
+                    
+                    if logged_data_response == 200:
+                        delete_query = ''' DELETE FROM sanitrend where ROWID=? '''
+                        for id in delete_ids:
+                            cur.execute(delete_query, (id,))
+                        db.commit()  
+
+            except Exception as e:
+                self.LogErrorToFile('_SendDataToTwx', e)
+            
+            self.Logging = False
+                
+
+        elif response != 200:
+            self.Logging = True
+            self.LogTwxDataToDB(ThingworxData)
+        
+        return None
+
+    # Function to send data to Thingworx
+    def _SendTwxData(self,ThingworxData: list) -> int:
         url = f'{self.ServerURL}Services/UpdatePropertyValues'
         values = {}
         values['rows'] = ThingworxData
@@ -228,61 +257,36 @@ class SaniTrend:
                status_code = http_response.status_code
 
             else:
-                self.LogErrorToFile('_LogThingworxData', http_response)
+                self.LogErrorToFile('_SendTwxData', http_response)
                 status_code =  http_response.status_code
 
         except Exception as e:
             self.LogErrorToFile('_SendToTwx', e)
         
         return status_code
-       
-    def LogDataToFile(self, data: list):
-        self.Logging = True
-        logfile = "TwxData.log"
-        mode = 'a+' if os.path.exists(logfile) else 'w+'
+
+
+    # Log Thingworx message to SQLite database
+    def LogTwxDataToDB(self, ThingworxData: list):
         try:
-            with open(logfile, mode) as file:
-                file.write(f'{data}\n')
-                print(f'{data}\n')
+            with sqlite3.connect(database=self.db) as db:
+                cur = db.cursor()  
+                cur.execute(''' CREATE TABLE if not exists sanitrend (TwxData text, SentToTwx integer) ''')   
+                records = []     
+                sql_as_text = ''
+                insert_query = ''' INSERT INTO sanitrend (TwxData, SentToTwx) VALUES (?,?); '''
+                sql_as_text = json.dumps(ThingworxData)
+                records.append((sql_as_text, False)) 
+                cur.executemany(insert_query, records)
+                db.commit()        
 
         except Exception as e:
-            self.LogErrorToFile('LogDataToFile', e)
+            self.LogErrorToFile('LogTwxDataToDB', e)
 
         self.Logging = False
+
         return None
 
-
-
-    # Send unsent data to Thingworx
-    def ForwardStoredData(self,):
-        timestamp = self.GetTimeMS()
-        if (timestamp - self._LastDataLogCheck) > 1 and not self.Logging:
-            self.Logging = True
-            if self.isConnected:
-                pass
-
-            self._LastDataLogCheck = timestamp
-
-            
-
-
-    # Threaded function to send data to Thingworx                        
-    def _ForwardStoredData(self,):
-        logfile = "TwxData.log"
-        logexists = os.path.exists(logfile)
-        rows = []
-
-        if logexists:
-            with open(logfile, "r+") as file:
-                num_lines = sum(1 for line in file)
-                if num_lines < 1024:
-                    lines = file.readlines()
-                    for line in lines:
-                        row = line.strip()
-                        
-                else:
-                    for i in range(1024):
-                        pass                                   
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'STCErrorLogs'

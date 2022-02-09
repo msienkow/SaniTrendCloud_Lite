@@ -14,26 +14,26 @@ def main():
     runCode = True
 
     while runCode:
-        # Get Connection Status For EMS
-        SaniTrend.ConnectionStatus()
-
         try:
+            # Get Connection Status For EMS
+            SaniTrend.ConnectionStatus()
+
             if PLC.connected:
-                scan_plc = SaniTrend.PLCScanTimerDN()
-                
+                PLCErrorCount = 0
+                scan_plc = SaniTrend.PLCScanTimerDN()               
                 if scan_plc:
                     # Read PLC tags
                     SaniTrend.TagData = PLC.read(*SaniTrend.Tags)
                     
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
-
-                    # Send in-memory data to Thingworx
-                    SaniTrend.SendDataToTwx()
-                    PLCErrorCount = 0
-
+                    
             else:
                 PLC.open()
+
+            # Send in-memory data to Thingworx
+            if (SaniTrend.TwxDataRows) > 1:
+                SaniTrend.SendDataToTwx()
                    
         except CommError:
             PLCErrorCount += 1

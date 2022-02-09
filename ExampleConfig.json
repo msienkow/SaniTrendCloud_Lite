@@ -2,8 +2,7 @@
     "Config": {
         "PLCIPAddress": "10.10.135.173",
         "PLCScanRate" : "1000",
-        "SMINumber": "test.thing.123",
-        "TwxTimerSP" : "1400"
+        "SMINumber": "test.thing.123"
     },
     "Tags": [
         {
