@@ -15,13 +15,24 @@ import sqlite3
 class SaniTrend:
     '''Set up SaniTrend parameters, tags, cloud configurations, etc...'''
     def __init__(self, *, ConfigFile=''):
-        self.PLCIPAddress = ''
-        self.PLCScanRate = 1000
-        self.Tags = []
+        # SaniTrend Lite Specific Properties
+        self.db = os.path.join(os.path.dirname(__file__), 'stc.db')
+        self.Logging = False
         self.TagData = []
         self.TagTable = []
         self.TwxDataRows = []
-        self.Logging = False
+        self.PLC_IPAddress = ''
+        self.PLC_Path = ''
+        self.Virt_AIn_Tag = ''
+        self.Virt_DIn_Tag = ''
+        self.Virtualize_AIn = 0
+        self.Virtualize_DIn = 0
+        self.Virtual_Tag_Config = []
+
+        # Universal Properties
+        self.PLCIPAddress = ''
+        self.PLCScanRate = 1000
+        self.Tags = []
         self.ServerURL = ''
         self.SMINumber = ''
         self.ConnectionStatusTime = 2
@@ -31,9 +42,7 @@ class SaniTrend:
         self._LastStatusUpdate = 0
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
-        self._LastDataLogCheck = 0
         self._OS = platform.system()
-        self.db = os.path.join(os.path.dirname(__file__), 'stc.db')
         self._HttpHeaders = {
             'Connection': 'keep-alive',
             'Accept': 'application/json',
@@ -90,6 +99,9 @@ class SaniTrend:
                 self.Tags.append(dict['tag'])
 
         return self
+
+    def GetVirtualSetupData(self,):
+        pass
 
     def PLCScanTimerDN(self):
         '''Get difference between current ms time and last plc scan ms time and check if it is greater than the setpoint'''
@@ -166,22 +178,19 @@ class SaniTrend:
             if twx_basetype.lower() != ignore_type:
                 tag_value = self.GetTagValue(TagName=twx_tag)
                 twx_tag_value = round(tag_value, 2) if isinstance(tag_value, float) else tag_value
+                twx_value['time'] = timestamp
+                twx_value['quality'] = 'GOOD'
+                twx_value['name'] = twx_tag
                 
                 if (twx_basetype == 'NUMBER' and math.isinf(twx_tag_value)):
                     twx_tag_value = -9999
-
-                twx_value['time'] = timestamp
-                twx_value['quality'] = 'GOOD'
-
-                if twx_tag_value == -9999:
                     twx_value['quality'] = 'BAD'
-                
-                twx_value['name'] = twx_tag
+     
                 twx_value['value'] = {
                     'value' : twx_tag_value,
                     'baseType' : twx_basetype
                 }
-                
+
                 self.TwxDataRows.append(twx_value)
         
 
@@ -209,6 +218,7 @@ class SaniTrend:
                 select_query = '''select ROWID,TwxData,SentToTwx from sanitrend where SentToTwx = false LIMIT 32'''
                 delete_ids = []
                 SQLThingworxData = []
+
                 with sqlite3.connect(database=self.db) as db:
                     cur = db.cursor()  
                     cur.execute(select_query)  
@@ -257,7 +267,7 @@ class SaniTrend:
                status_code = http_response.status_code
 
             else:
-                self.LogErrorToFile('_SendTwxData', http_response)
+                # self.LogErrorToFile('_SendTwxData', http_response)
                 status_code =  http_response.status_code
 
         except Exception as e:
