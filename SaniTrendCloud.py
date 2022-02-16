@@ -23,10 +23,12 @@ class SaniTrend:
         self.TwxDataRows = []
         self.PLC_IPAddress = ''
         self.PLC_Path = ''
-        self.Virt_AIn_Tag = ''
-        self.Virt_DIn_Tag = ''
+        self.Virtual_AIn_Tag = ''
+        self.Virtual_DIn_Tag = ''
+        self.Virtual_String_Tag = ''
         self.Virtualize_AIn = 0
         self.Virtualize_DIn = 0
+        self.Virtualize_String = 0
         self.Virtual_Tag_Config = []
 
         # Universal Properties
@@ -287,7 +289,7 @@ class SaniTrend:
                 insert_query = ''' INSERT INTO sanitrend (TwxData, SentToTwx) VALUES (?,?); '''
                 sql_as_text = json.dumps(ThingworxData)
                 records.append((sql_as_text, False)) 
-                cur.executemany(insert_query, records)
+                cur.execute(insert_query, records)
                 db.commit()        
 
         except Exception as e:
@@ -306,6 +308,7 @@ class SaniTrend:
         errorMonth = currentDateTime.strftime('%B')
         errorMonthDirectory = os.path.join(errorYearDirectory, errorMonth)
         directories = [errorTopDirectory, errorYearDirectory, errorMonthDirectory]
+        
         # Try to create directories, if they exists move on
         for directory in directories:
             try:
