@@ -109,7 +109,7 @@ class SaniTrend:
         '''Get Data Configuration for Property Values (Min/Max/Units/Tagname)'''
         timerPreset = 10000
         currentMS = self.GetTimeMS()
-        if (((currentMS - self._LastConfigUpdate) >= timerPreset) and not self._ConfigUpdateRunning):
+        if (((currentMS - self._LastConfigUpdate) >= timerPreset) and not self._ConfigUpdateRunning and self.isConnected):
             self._ConfigUpdateRunning = True
             self._LastConfigUpdate = currentMS
             threading.Thread(target=self._GetVirtualSetupData).start()
@@ -122,18 +122,43 @@ class SaniTrend:
         try:
             serviceResult = self._ConfigSession.post(url, headers=self._HttpHeaders, timeout=5)
             if serviceResult.status_code == 200:
-                self.isConnected = (serviceResult.json())['rows'][0]['isConnected']
+                self.Virtual_Tag_Config = []
+                rows = (serviceResult.json())['rows'][0]['PropertyConfig']['rows']
+                analog = 'ANALOG'
+                digital = 'DIGITAL'
 
-            else:
-                self.LogErrorToFile('_ConnectionStatus', serviceResult)
-                self.isConnected = False
-        
+                for dict in rows:
+                    propertyName = dict['PropertyName']
+                    nameParts = propertyName.split('_')
+                    propertyType = nameParts[0]
+                    propertyNumber = (nameParts[len(nameParts) - 1]) - 1
+
+                    if propertyType.upper() in analog:
+                        tagNameTag = f'Analog_In_Tags[{propertyNumber}]'
+                        tagName = dict['TagName'] 
+                        tagData = (tagNameTag, tagName)
+                        EUMinTag = f'Analog_In_Min[{propertyNumber}]'
+                        EUMinVal = dict['EUMin']
+                        EUMinData = (EUMinTag, EUMinVal)
+                        EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
+                        EUMaxVal = dict['EUMax']
+                        EUMaxData = (EUMaxTag, EUMaxVal)
+                        UnitsTag = f'Analog_In_Units[{propertyNumber}]'
+                        UnitsVal = dict['Units']
+                        UnitsData = (UnitsTag, UnitsVal)
+                        self.Virtual_Tag_Config.extend((tagData, EUMinData, EUMaxData, UnitsData))
+
+                    if propertyType.upper() in digital:
+                        tagNameTag = f'Digital_In_Tags[{propertyNumber}]'
+                        tagName = dict['TagName'] 
+                        tagData = (tagNameTag, tagName)
+                        self.Virtual_Tag_Config.append(tagData)
+
         except Exception as e:
-            self.isConnected = False
-            self.LogErrorToFile('_ConnectionStatus', e)
+            self.LogErrorToFile('_GetVirtualSetupData', e)
 
-    # Release Bit so watchdog can run again
-    self._ConnectionStatusRunning = False
+        # Release Bit so code can run again
+        self._ConfigUpdateRunning = False
 
     def PLCScanTimerDN(self):
         '''Get difference between current ms time and last plc scan ms time and check if it is greater than the setpoint'''
