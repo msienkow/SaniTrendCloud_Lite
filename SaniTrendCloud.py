@@ -41,7 +41,7 @@ class SaniTrend:
         self.isConnected = False
         self._PLC_Last_Scan = 0
         self._ConnectionStatusRunning = False
-        self._ConfigUpdateRunning = False
+        self.ConfigUpdateRunning = False
         self._LastStatusUpdate = 0
         self._LastConfigUpdate = 0
         self._ConnectionStatusSession = requests.Session()
@@ -109,8 +109,8 @@ class SaniTrend:
         '''Get Data Configuration for Property Values (Min/Max/Units/Tagname)'''
         timerPreset = 10000
         currentMS = self.GetTimeMS()
-        if (((currentMS - self._LastConfigUpdate) >= timerPreset) and not self._ConfigUpdateRunning and self.isConnected):
-            self._ConfigUpdateRunning = True
+        if (((currentMS - self._LastConfigUpdate) >= timerPreset) and not self.ConfigUpdateRunning and self.isConnected):
+            self.ConfigUpdateRunning = True
             self._LastConfigUpdate = currentMS
             threading.Thread(target=self._GetVirtualSetupData).start()
         return None
@@ -158,7 +158,7 @@ class SaniTrend:
             self.LogErrorToFile('_GetVirtualSetupData', e)
 
         # Release Bit so code can run again
-        self._ConfigUpdateRunning = False
+        self.ConfigUpdateRunning = False
 
     def PLCScanTimerDN(self):
         '''Get difference between current ms time and last plc scan ms time and check if it is greater than the setpoint'''

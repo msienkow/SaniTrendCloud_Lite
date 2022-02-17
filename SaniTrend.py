@@ -27,6 +27,10 @@ def main():
                     
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
+
+                # Update parameters in PLC from Thingworx values in cloud
+                if not SaniTrend.ConfigUpdateRunning and SaniTrend.isConnected and SaniTrend.Virtual_Tag_Config:
+                    PLC.write(SaniTrend.Virtual_Tag_Config)
                     
             else:
                 PLC.open()
