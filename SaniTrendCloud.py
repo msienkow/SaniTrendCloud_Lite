@@ -41,9 +41,12 @@ class SaniTrend:
         self.isConnected = False
         self._PLC_Last_Scan = 0
         self._ConnectionStatusRunning = False
+        self._ConfigUpdateRunning = False
         self._LastStatusUpdate = 0
+        self._LastConfigUpdate = 0
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
+        self._ConfigSession = requests.Session()
         self._OS = platform.system()
         self._HttpHeaders = {
             'Connection': 'keep-alive',
@@ -103,7 +106,34 @@ class SaniTrend:
         return self
 
     def GetVirtualSetupData(self,):
-        pass
+        '''Get Data Configuration for Property Values (Min/Max/Units/Tagname)'''
+        timerPreset = 10000
+        currentMS = self.GetTimeMS()
+        if (((currentMS - self._LastConfigUpdate) >= timerPreset) and not self._ConfigUpdateRunning):
+            self._ConfigUpdateRunning = True
+            self._LastConfigUpdate = currentMS
+            threading.Thread(target=self._GetVirtualSetupData).start()
+        return None
+        
+
+    def _GetVirtualSetupData(self,):
+        '''Threaded method for getting property value configuration.'''
+        url = f'{self.ServerURL}Services/GetPropertyValues'
+        try:
+            serviceResult = self._ConfigSession.post(url, headers=self._HttpHeaders, timeout=5)
+            if serviceResult.status_code == 200:
+                self.isConnected = (serviceResult.json())['rows'][0]['isConnected']
+
+            else:
+                self.LogErrorToFile('_ConnectionStatus', serviceResult)
+                self.isConnected = False
+        
+        except Exception as e:
+            self.isConnected = False
+            self.LogErrorToFile('_ConnectionStatus', e)
+
+    # Release Bit so watchdog can run again
+    self._ConnectionStatusRunning = False
 
     def PLCScanTimerDN(self):
         '''Get difference between current ms time and last plc scan ms time and check if it is greater than the setpoint'''
@@ -225,15 +255,15 @@ class SaniTrend:
                     cur = db.cursor()  
                     cur.execute(select_query)  
                     records = cur.fetchall()
-
+                
                     for row in records:
                         delete_ids.append(row[0])
                         twx_data = json.loads(row[1])
+                
                         for dict in twx_data:
                             SQLThingworxData.append(dict)
                     
                     logged_data_response = self._SendTwxData(SQLThingworxData)
-                    
                     if logged_data_response == 200:
                         delete_query = ''' DELETE FROM sanitrend where ROWID=? '''
                         for id in delete_ids:
@@ -244,7 +274,6 @@ class SaniTrend:
                 self.LogErrorToFile('_SendDataToTwx', e)
             
             self.Logging = False
-                
 
         elif response != 200:
             self.Logging = True
