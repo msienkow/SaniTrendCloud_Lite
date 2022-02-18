@@ -1,982 +1,113 @@
 {
-    "rows": [
+    "Config": {
+        "PLCIPAddress": "10.10.135.173",
+        "PLCScanRate" : "1000",
+        "SMINumber": "test.thing.123"
+    },
+    "Tags": [
         {
-            "name": "test.thing.123",
-            "description": "This is a description. ",
-            "thingTemplate": "SaniTrendCloud.RemoteTunnel",
-            "tags": "",
-            "isReporting": true,
-            "reportingLastEvaluation": 1645043494255,
-            "reportingLastChange": 1645043494255,
-            "isConnected": true,
-            "lastConnection": 1645043494250,
-            "providerName": "ThingworxInternalRemoteAccessProvider",
-            "PropertyConfig": {
-                "rows": [
-                    {
-                        "PropertyName": "Analog_In_1",
-                        "TagName": "Analog_In_1",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Analog_In_2",
-                        "TagName": "Analog_In_2",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Analog_In_3",
-                        "TagName": "Analog_In_3",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Analog_In_4",
-                        "TagName": "Analog_In_4",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Analog_In_5",
-                        "TagName": "Analog_In_5",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Analog_In_6",
-                        "TagName": "Analog_In_6",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Analog_In_7",
-                        "TagName": "Analog_In_7",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Analog_In_8",
-                        "TagName": "Analog_In_8",
-                        "EUMin": 0,
-                        "EUMax": 100,
-                        "Units": "%"
-                    },
-                    {
-                        "PropertyName": "Digital_In_1",
-                        "TagName": "Digital_In_1",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_2",
-                        "TagName": "Digital_In_2",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_3",
-                        "TagName": "Digital_In_3",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_4",
-                        "TagName": "Digital_In_4",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_5",
-                        "TagName": "Digital_In_5",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_6",
-                        "TagName": "Digital_In_6",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_7",
-                        "TagName": "Digital_In_7",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_8",
-                        "TagName": "Digital_In_8",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_9",
-                        "TagName": "Digital_In_9",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_10",
-                        "TagName": "Digital_In_10",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_11",
-                        "TagName": "Digital_In_11",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    },
-                    {
-                        "PropertyName": "Digital_In_12",
-                        "TagName": "Digital_In_12",
-                        "EUMin": 0,
-                        "EUMax": 1,
-                        "Units": ""
-                    }
-                ],
-                "datashape": {
-                    "fieldDefinitions": {
-                        "PropertyName": {
-                            "name": "PropertyName",
-                            "description": "",
-                            "baseType": "STRING",
-                            "aspects": {
-                                "isPrimaryKey": true
-                            }
-                        },
-                        "TagName": {
-                            "name": "TagName",
-                            "description": "",
-                            "baseType": "STRING",
-                            "aspects": {
-                                "isPrimaryKey": false
-                            }
-                        },
-                        "EUMin": {
-                            "name": "EUMin",
-                            "description": "Minimum Scale Enginerring Units",
-                            "baseType": "NUMBER",
-                            "aspects": {
-                                "isPrimaryKey": false
-                            }
-                        },
-                        "EUMax": {
-                            "name": "EUMax",
-                            "description": "Maximum Scale Engineering Units",
-                            "baseType": "NUMBER",
-                            "aspects": {
-                                "isPrimaryKey": false
-                            }
-                        },
-                        "Units": {
-                            "name": "Units",
-                            "description": "Engineering Units",
-                            "baseType": "STRING",
-                            "aspects": {
-                                "isPrimaryKey": false
-                            }
-                        }
-                    }
-                }
-            },
-            "Analog_In_1": 0,
-            "remoteServerConfiguration": {
-                "rows": [],
-                "datashape": {
-                    "fieldDefinitions": {
-                        "endpointName": {
-                            "name": "endpointName",
-                            "description": "Name of the endpoint interface for which this server configuration applies",
-                            "baseType": "STRING",
-                            "aspects": {
-                                "isPrimaryKey": true
-                            }
-                        },
-                        "serverConfiguration": {
-                            "name": "serverConfiguration",
-                            "description": "Server configuration data",
-                            "baseType": "JSON",
-                            "aspects": {
-                                "isPrimaryKey": false
-                            }
-                        }
-                    }
-                }
-            },
-            "Analog_In_2": 0,
-            "Volts": 1.05,
-            "Analog_In_3": 0,
-            "Test_Analog_Real": 432,
-            "Analog_In_4": 0,
-            "_IO_EM_AI_01": 432,
-            "Analog_In_5": 0,
-            "Inches": 0,
-            "Test_String": "",
-            "Analog_In_6": 0,
-            "Sim_Value": 125,
-            "Analog_In_7": 0,
-            "RPI_Value": 124.82,
-            "Analog_In_8": 0,
-            "Digital_In_1": false,
-            "Digital_In_2": false,
-            "Digital_In_3": false,
-            "Digital_In_4": false,
-            "Digital_In_5": false,
-            "Digital_In_6": false,
-            "Digital_In_7": false,
-            "Digital_In_8": false,
-            "Digital_In_9": false,
-            "Digital_In_10": false,
-            "Digital_In_11": false,
-            "Digital_In_12": false,
-            "Virtual_AIn_Tag": "",
-            "Virtual_DIn_Tag": "",
-            "Virtual_String_Tag": "",
-            "Virtualize_AIn": 0,
-            "Virtualize_DIn": 0,
-            "Virtualize_String": 0,
-            "PLC_IPAddress": "",
-            "PLC_Path": ""
+            "tag": "Analog_In_1",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Analog_In_2",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Analog_In_3",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Analog_In_4",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Analog_In_5",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Analog_In_6",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Analog_In_7",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Analog_In_8",
+            "twxtype": "NUMBER"
+        },
+		{
+            "tag": "Digital_In_1",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_1",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_1",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_1",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_2",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_3",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_4",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_5",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_6",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_7",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_8",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_9",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_10",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_11",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Digital_In_12",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "SaniTrend_Watchdog",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "PLC_Watchdog",
+            "twxtype": "BOOLEAN"
+        },
+		{
+            "tag": "Reboot",
+            "twxtype": "BOOLEAN"
         }
-    ],
-    "datashape": {
-        "fieldDefinitions": {
-            "name": {
-                "name": "name",
-                "description": "Thing name",
-                "baseType": "STRING",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": false,
-                    "isBuiltIn": true
-                }
-            },
-            "description": {
-                "name": "description",
-                "description": "Thing description",
-                "baseType": "STRING",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": false,
-                    "isBuiltIn": true
-                }
-            },
-            "thingTemplate": {
-                "name": "thingTemplate",
-                "description": "Thing Template",
-                "baseType": "THINGTEMPLATENAME",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": false,
-                    "isBuiltIn": true
-                }
-            },
-            "tags": {
-                "name": "tags",
-                "description": "Thing Tags",
-                "baseType": "TAGS",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": false,
-                    "tagType": "ModelTags",
-                    "isBuiltIn": true
-                }
-            },
-            "isReporting": {
-                "name": "isReporting",
-                "description": "Health of this device's connection",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "defaultValue": false,
-                    "isPersistent": false
-                }
-            },
-            "reportingLastEvaluation": {
-                "name": "reportingLastEvaluation",
-                "description": "Last time evaluated for Reporting",
-                "baseType": "DATETIME",
-                "aspects": {
-                    "isReadOnly": true,
-                    "defaultValue": 0,
-                    "isPersistent": true
-                }
-            },
-            "reportingLastChange": {
-                "name": "reportingLastChange",
-                "description": "Last time isReporting value changed",
-                "baseType": "DATETIME",
-                "aspects": {
-                    "isReadOnly": true,
-                    "defaultValue": 0,
-                    "isPersistent": true
-                }
-            },
-            "isConnected": {
-                "name": "isConnected",
-                "description": "Flag indicating if connected or not",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "defaultValue": false,
-                    "isPersistent": false
-                }
-            },
-            "lastConnection": {
-                "name": "lastConnection",
-                "description": "Last connection time",
-                "baseType": "DATETIME",
-                "aspects": {
-                    "isReadOnly": true,
-                    "defaultValue": 0,
-                    "isPersistent": true
-                }
-            },
-            "providerName": {
-                "name": "providerName",
-                "description": "The RemoteAccessProvider for this Thing.",
-                "baseType": "THINGNAME",
-                "aspects": {
-                    "thingShape": "RemoteAccessProvider",
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE"
-                }
-            },
-            "PropertyConfig": {
-                "name": "PropertyConfig",
-                "description": "",
-                "baseType": "INFOTABLE",
-                "aspects": {
-                    "defaultValue": {
-                        "rows": [
-                            {
-                                "PropertyName": "Analog_In_1",
-                                "TagName": "Analog_In_1",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Analog_In_2",
-                                "TagName": "Analog_In_2",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Analog_In_3",
-                                "TagName": "Analog_In_3",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Analog_In_4",
-                                "TagName": "Analog_In_4",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Analog_In_5",
-                                "TagName": "Analog_In_5",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Analog_In_6",
-                                "TagName": "Analog_In_6",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Analog_In_7",
-                                "TagName": "Analog_In_7",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Analog_In_8",
-                                "TagName": "Analog_In_8",
-                                "EUMin": 0,
-                                "EUMax": 100,
-                                "Units": "%"
-                            },
-                            {
-                                "PropertyName": "Digital_In_1",
-                                "TagName": "Digital_In_1",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_2",
-                                "TagName": "Digital_In_2",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_3",
-                                "TagName": "Digital_In_3",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_4",
-                                "TagName": "Digital_In_4",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_5",
-                                "TagName": "Digital_In_5",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_6",
-                                "TagName": "Digital_In_6",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_7",
-                                "TagName": "Digital_In_7",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_8",
-                                "TagName": "Digital_In_8",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_9",
-                                "TagName": "Digital_In_9",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_10",
-                                "TagName": "Digital_In_10",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_11",
-                                "TagName": "Digital_In_11",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            },
-                            {
-                                "PropertyName": "Digital_In_12",
-                                "TagName": "Digital_In_12",
-                                "EUMin": 0,
-                                "EUMax": 1,
-                                "Units": ""
-                            }
-                        ],
-                        "datashape": {
-                            "fieldDefinitions": {
-                                "PropertyName": {
-                                    "name": "PropertyName",
-                                    "description": "",
-                                    "baseType": "STRING",
-                                    "aspects": {
-                                        "isPrimaryKey": true
-                                    }
-                                },
-                                "TagName": {
-                                    "name": "TagName",
-                                    "description": "",
-                                    "baseType": "STRING",
-                                    "aspects": {
-                                        "isPrimaryKey": false
-                                    }
-                                },
-                                "EUMin": {
-                                    "name": "EUMin",
-                                    "description": "Minimum Scale Enginerring Units",
-                                    "baseType": "NUMBER",
-                                    "aspects": {
-                                        "isPrimaryKey": false
-                                    }
-                                },
-                                "EUMax": {
-                                    "name": "EUMax",
-                                    "description": "Maximum Scale Engineering Units",
-                                    "baseType": "NUMBER",
-                                    "aspects": {
-                                        "isPrimaryKey": false
-                                    }
-                                },
-                                "Units": {
-                                    "name": "Units",
-                                    "description": "Engineering Units",
-                                    "baseType": "STRING",
-                                    "aspects": {
-                                        "isPrimaryKey": false
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "dataShape": "SaniMatic.SaniTrend.PropertyDefinitions_DS",
-                    "cacheTime": 0
-                }
-            },
-            "Analog_In_1": {
-                "name": "Analog_In_1",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "remoteServerConfiguration": {
-                "name": "remoteServerConfiguration",
-                "description": "The remote server-side configuration properties of endpoints on this Thing.",
-                "baseType": "INFOTABLE",
-                "aspects": {
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "dataShape": "RemoteServerConfiguration"
-                }
-            },
-            "Analog_In_2": {
-                "name": "Analog_In_2",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Volts": {
-                "name": "Volts",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Analog_In_3": {
-                "name": "Analog_In_3",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Test_Analog_Real": {
-                "name": "Test_Analog_Real",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Analog_In_4": {
-                "name": "Analog_In_4",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "_IO_EM_AI_01": {
-                "name": "_IO_EM_AI_01",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Analog_In_5": {
-                "name": "Analog_In_5",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Inches": {
-                "name": "Inches",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "dataChangeThreshold": 0.24,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Test_String": {
-                "name": "Test_String",
-                "description": "",
-                "baseType": "STRING",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": false,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Analog_In_6": {
-                "name": "Analog_In_6",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Sim_Value": {
-                "name": "Sim_Value",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Analog_In_7": {
-                "name": "Analog_In_7",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "RPI_Value": {
-                "name": "RPI_Value",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Analog_In_8": {
-                "name": "Analog_In_8",
-                "description": "",
-                "baseType": "NUMBER",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_1": {
-                "name": "Digital_In_1",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_2": {
-                "name": "Digital_In_2",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_3": {
-                "name": "Digital_In_3",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_4": {
-                "name": "Digital_In_4",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_5": {
-                "name": "Digital_In_5",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_6": {
-                "name": "Digital_In_6",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_7": {
-                "name": "Digital_In_7",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_8": {
-                "name": "Digital_In_8",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_9": {
-                "name": "Digital_In_9",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_10": {
-                "name": "Digital_In_10",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_11": {
-                "name": "Digital_In_11",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Digital_In_12": {
-                "name": "Digital_In_12",
-                "description": "",
-                "baseType": "BOOLEAN",
-                "aspects": {
-                    "isReadOnly": true,
-                    "isPersistent": true,
-                    "isLogged": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Virtual_AIn_Tag": {
-                "name": "Virtual_AIn_Tag",
-                "description": "",
-                "baseType": "STRING",
-                "aspects": {
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Virtual_DIn_Tag": {
-                "name": "Virtual_DIn_Tag",
-                "description": "",
-                "baseType": "STRING",
-                "aspects": {
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Virtual_String_Tag": {
-                "name": "Virtual_String_Tag",
-                "description": "",
-                "baseType": "STRING",
-                "aspects": {
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Virtualize_AIn": {
-                "name": "Virtualize_AIn",
-                "description": "",
-                "baseType": "INTEGER",
-                "aspects": {
-                    "defaultValue": 0,
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Virtualize_DIn": {
-                "name": "Virtualize_DIn",
-                "description": "",
-                "baseType": "INTEGER",
-                "aspects": {
-                    "defaultValue": 0,
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "Virtualize_String": {
-                "name": "Virtualize_String",
-                "description": "",
-                "baseType": "INTEGER",
-                "aspects": {
-                    "defaultValue": 0,
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "PLC_IPAddress": {
-                "name": "PLC_IPAddress",
-                "description": "",
-                "baseType": "STRING",
-                "aspects": {
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            },
-            "PLC_Path": {
-                "name": "PLC_Path",
-                "description": "",
-                "baseType": "STRING",
-                "aspects": {
-                    "isPersistent": true,
-                    "dataChangeType": "VALUE",
-                    "cacheTime": 0
-                }
-            }
-        }
-    }
+    ]
 }

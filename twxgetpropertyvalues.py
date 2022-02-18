@@ -10,15 +10,44 @@ headers = {'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Ty
 # for property in properties:
 #    url = f'http://localhost:8000/Thingworx/Things/test.thing.123/Properties/{property}'
 #    response = requests.get(url, headers=headers)
-url = f'http://localhost:8000/Thingworx/Things/test.thing.123/Services/GetPropertyValues'
-response = requests.post(url, headers=headers).json()
+url = f'https://sanimatic-dev.cloud.thingworx.com/Thingworx/Things/test.thing.123/Services/GetPropertyValues'
+response = requests.post(url, headers=headers)
 
-print(response['rows'][0]['Volts'])
-print(response['rows'][0]['name'])
-print(response['rows'][0]['description'])
+
+Virtual_Tag_Config = []
+rows = (response.json())['rows'][0]['PropertyConfig']['rows']
+analog = 'ANALOG'
+digital = 'DIGITAL'
+
+for dict in rows:
+    propertyName = dict['PropertyName']
+    nameParts = propertyName.split('_')
+    propertyType = nameParts[0]
+    propertyNumber = int(nameParts[len(nameParts) - 1]) - 1
+
+    if propertyType.upper() in analog:
+        tagNameTag = f'Analog_In_Tags[{propertyNumber}]'
+        tagName = dict['TagName'] 
+        tagData = (tagNameTag, tagName)
+        EUMinTag = f'Analog_In_Min[{propertyNumber}]'
+        EUMinVal = dict['EUMin']
+        EUMinData = (EUMinTag, EUMinVal)
+        EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
+        EUMaxVal = dict['EUMax']
+        EUMaxData = (EUMaxTag, EUMaxVal)
+        UnitsTag = f'Analog_In_Units[{propertyNumber}]'
+        UnitsVal = dict['Units']
+        UnitsData = (UnitsTag, UnitsVal)
+        Virtual_Tag_Config.extend((tagData, EUMinData, EUMaxData, UnitsData))
+
+    if propertyType.upper() in digital:
+        tagNameTag = f'Digital_In_Tags[{propertyNumber}]'
+        tagName = dict['TagName'] 
+        tagData = (tagNameTag, tagName)
+        Virtual_Tag_Config.append(tagData)
 
 end = time.perf_counter()
 
 total = end - start
-
+print(Virtual_Tag_Config)
 print(f'Total Time = {total} seconds')

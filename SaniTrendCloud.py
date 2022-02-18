@@ -109,7 +109,7 @@ class SaniTrend:
         '''Get Data Configuration for Property Values (Min/Max/Units/Tagname)'''
         timerPreset = 10000
         currentMS = self.GetTimeMS()
-        if (((currentMS - self._LastConfigUpdate) >= timerPreset) and not self.ConfigUpdateRunning and self.isConnected):
+        if currentMS - self._LastConfigUpdate >= timerPreset and not self.ConfigUpdateRunning and self.isConnected:
             self.ConfigUpdateRunning = True
             self._LastConfigUpdate = currentMS
             threading.Thread(target=self._GetVirtualSetupData).start()
@@ -131,28 +131,28 @@ class SaniTrend:
                     propertyName = dict['PropertyName']
                     nameParts = propertyName.split('_')
                     propertyType = nameParts[0]
-                    propertyNumber = (nameParts[len(nameParts) - 1]) - 1
+                    propertyNumber = int(nameParts[len(nameParts) - 1]) - 1
 
-                    if propertyType.upper() in analog:
-                        tagNameTag = f'Analog_In_Tags[{propertyNumber}]'
-                        tagName = dict['TagName'] 
-                        tagData = (tagNameTag, tagName)
-                        EUMinTag = f'Analog_In_Min[{propertyNumber}]'
-                        EUMinVal = dict['EUMin']
-                        EUMinData = (EUMinTag, EUMinVal)
-                        EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
-                        EUMaxVal = dict['EUMax']
-                        EUMaxData = (EUMaxTag, EUMaxVal)
-                        UnitsTag = f'Analog_In_Units[{propertyNumber}]'
-                        UnitsVal = dict['Units']
-                        UnitsData = (UnitsTag, UnitsVal)
-                        self.Virtual_Tag_Config.extend((tagData, EUMinData, EUMaxData, UnitsData))
+                    # if propertyType.upper() in analog:
+                    #     tagNameTag = f'Analog_In_Tags[{propertyNumber}]'
+                    #     tagName = dict['TagName'] 
+                    #     tagData = (tagNameTag, tagName)
+                    #     EUMinTag = f'Analog_In_Min[{propertyNumber}]'
+                    #     EUMinVal = dict['EUMin']
+                    #     EUMinData = (EUMinTag, EUMinVal)
+                    #     EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
+                    #     EUMaxVal = dict['EUMax']
+                    #     EUMaxData = (EUMaxTag, EUMaxVal)
+                    #     UnitsTag = f'Analog_In_Units[{propertyNumber}]'
+                    #     UnitsVal = dict['Units']
+                    #     UnitsData = (UnitsTag, UnitsVal)
+                    #     self.Virtual_Tag_Config.extend((tagData, EUMinData, EUMaxData, UnitsData))
 
-                    if propertyType.upper() in digital:
-                        tagNameTag = f'Digital_In_Tags[{propertyNumber}]'
-                        tagName = dict['TagName'] 
-                        tagData = (tagNameTag, tagName)
-                        self.Virtual_Tag_Config.append(tagData)
+                    # if propertyType.upper() in digital:
+                    #     tagNameTag = f'Digital_In_Tags[{propertyNumber}]'
+                    #     tagName = dict['TagName'] 
+                    #     tagData = (tagNameTag, tagName)
+                    #     self.Virtual_Tag_Config.append(tagData)
 
         except Exception as e:
             self.LogErrorToFile('_GetVirtualSetupData', e)

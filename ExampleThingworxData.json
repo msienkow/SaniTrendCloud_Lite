@@ -1,130 +1,142 @@
-{
-    "values": {
-        "rows": [
-            {
-                "time": "2021-12-01T15:12:45.358186Z",
-                "quality": "GOOD",
-                "name": "Inches",
-                "value": {
-                    "value": 21.29,
-                    "baseType": "NUMBER"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:45.358186Z",
-                "quality": "GOOD",
-                "name": "Test_Analog_Real",
-                "value": {
-                    "value": 864.0,
-                    "baseType": "NUMBER"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:45.358186Z",
-                "quality": "GOOD",
-                "name": "Test_String",
-                "value": {
-                    "value": "This is a test",
-                    "baseType": "STRING"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:45.358186Z",
-                "quality": "GOOD",
-                "name": "Volts",
-                "value": {
-                    "value": 2.11,
-                    "baseType": "NUMBER"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:45.358186Z",
-                "quality": "GOOD",
-                "name": "_IO_EM_AI_01",
-                "value": {
-                    "value": 860,
-                    "baseType": "NUMBER"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:46.394328Z",
-                "quality": "GOOD",
-                "name": "Inches",
-                "value": {
-                    "value": 21.29,
-                    "baseType": "NUMBER"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:46.394328Z",
-                "quality": "GOOD",
-                "name": "Test_Analog_Real",
-                "value": {
-                    "value": 864.0,
-                    "baseType": "NUMBER"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:46.394328Z",
-                "quality": "GOOD",
-                "name": "Test_String",
-                "value": {
-                    "value": "This is a test",
-                    "baseType": "STRING"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:46.394328Z",
-                "quality": "GOOD",
-                "name": "Volts",
-                "value": {
-                    "value": 2.11,
-                    "baseType": "NUMBER"
-                }
-            },
-            {
-                "time": "2021-12-01T15:12:46.394328Z",
-                "quality": "GOOD",
-                "name": "_IO_EM_AI_01",
-                "value": {
-                    "value": 864,
-                    "baseType": "NUMBER"
-                }
-            }
-        ],
-        "dataShape": {
-            "fieldDefinitions": {
-                "name": {
-                    "name": "name",
-                    "aspects": {
-                        "isPrimaryKey": true
-                    },
-                    "description": "Property name",
-                    "baseType": "STRING",
-                    "ordinal": 0
-                },
-                "time": {
-                    "name": "time",
-                    "aspects": {},
-                    "description": "time",
-                    "baseType": "DATETIME",
-                    "ordinal": 0
-                },
-                "value": {
-                    "name": "value",
-                    "aspects": {},
-                    "description": "value",
-                    "baseType": "VARIANT",
-                    "ordinal": 0
-                },
-                "quality": {
-                    "name": "quality",
-                    "aspects": {},
-                    "description": "quality",
-                    "baseType": "STRING",
-                    "ordinal": 0
-                }
-            }
-        }
+[
+    {
+        "PropertyName": "Analog_In_1",
+        "TagName": "Analog_In_1",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Analog_In_2",
+        "TagName": "Analog_In_2",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Analog_In_3",
+        "TagName": "Analog_In_3",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Analog_In_4",
+        "TagName": "Analog_In_4",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Analog_In_5",
+        "TagName": "Analog_In_5",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Analog_In_6",
+        "TagName": "Analog_In_6",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Analog_In_7",
+        "TagName": "Analog_In_7",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Analog_In_8",
+        "TagName": "Analog_In_8",
+        "EUMin": 0,
+        "EUMax": 100,
+        "Units": "%"
+    },
+    {
+        "PropertyName": "Digital_In_1",
+        "TagName": "Digital_In_1",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_2",
+        "TagName": "Digital_In_2",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_3",
+        "TagName": "Digital_In_3",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_4",
+        "TagName": "Digital_In_4",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_5",
+        "TagName": "Digital_In_5",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_6",
+        "TagName": "Digital_In_6",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_7",
+        "TagName": "Digital_In_7",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_8",
+        "TagName": "Digital_In_8",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_9",
+        "TagName": "Digital_In_9",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_10",
+        "TagName": "Digital_In_10",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_11",
+        "TagName": "Digital_In_11",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
+    },
+    {
+        "PropertyName": "Digital_In_12",
+        "TagName": "Digital_In_12",
+        "EUMin": 0,
+        "EUMax": 1,
+        "Units": ""
     }
-}
+]
