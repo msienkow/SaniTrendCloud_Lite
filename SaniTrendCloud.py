@@ -128,31 +128,26 @@ class SaniTrend:
                 digital = 'DIGITAL'
 
                 for dict in rows:
-                    propertyName = dict['PropertyName']
-                    nameParts = propertyName.split('_')
-                    propertyType = nameParts[0]
-                    propertyNumber = int(nameParts[len(nameParts) - 1]) - 1
+                    for propertyName, tagName, EUMinVal, EUMaxVal, UnitsVal in dict:
+                        nameParts = propertyName.split('_')
+                        propertyType = nameParts[0]
+                        propertyNumber = int(nameParts[len(nameParts) - 1]) - 1
+                        
+                        if propertyType.upper() in analog:
+                            tagNameTag = f'Analog_In_Tags[{propertyNumber}]'
+                            tagData = (tagNameTag, tagName)
+                            EUMinTag = f'Analog_In_Min[{propertyNumber}]'
+                            EUMinData = (EUMinTag, EUMinVal)
+                            EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
+                            EUMaxData = (EUMaxTag, EUMaxVal)
+                            UnitsTag = f'Analog_In_Units[{propertyNumber}]'
+                            UnitsData = (UnitsTag, UnitsVal)
+                            self.Virtual_Tag_Config.extend((tagData, EUMinData, EUMaxData, UnitsData))
 
-                    # if propertyType.upper() in analog:
-                    #     tagNameTag = f'Analog_In_Tags[{propertyNumber}]'
-                    #     tagName = dict['TagName'] 
-                    #     tagData = (tagNameTag, tagName)
-                    #     EUMinTag = f'Analog_In_Min[{propertyNumber}]'
-                    #     EUMinVal = dict['EUMin']
-                    #     EUMinData = (EUMinTag, EUMinVal)
-                    #     EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
-                    #     EUMaxVal = dict['EUMax']
-                    #     EUMaxData = (EUMaxTag, EUMaxVal)
-                    #     UnitsTag = f'Analog_In_Units[{propertyNumber}]'
-                    #     UnitsVal = dict['Units']
-                    #     UnitsData = (UnitsTag, UnitsVal)
-                    #     self.Virtual_Tag_Config.extend((tagData, EUMinData, EUMaxData, UnitsData))
-
-                    # if propertyType.upper() in digital:
-                    #     tagNameTag = f'Digital_In_Tags[{propertyNumber}]'
-                    #     tagName = dict['TagName'] 
-                    #     tagData = (tagNameTag, tagName)
-                    #     self.Virtual_Tag_Config.append(tagData)
+                        if propertyType.upper() in digital:
+                            tagNameTag = f'Digital_In_Tags[{propertyNumber}]' 
+                            tagData = (tagNameTag, tagName)
+                            self.Virtual_Tag_Config.append(tagData)
 
         except Exception as e:
             self.LogErrorToFile('_GetVirtualSetupData', e)
@@ -278,6 +273,7 @@ class SaniTrend:
 
                 with sqlite3.connect(database=self.db) as db:
                     cur = db.cursor()  
+                    cur.execute(''' CREATE TABLE if not exists sanitrend (TwxData text, SentToTwx integer) ''')
                     cur.execute(select_query)  
                     records = cur.fetchall()
                 

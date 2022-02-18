@@ -50,7 +50,7 @@ def main():
                 PLC.open()
 
             # Send in-memory data to Thingworx
-            if (SaniTrend.TwxDataRows) > 1:
+            if len(SaniTrend.TwxDataRows) > 0:
                 SaniTrend.SendDataToTwx()
                    
         except CommError:
