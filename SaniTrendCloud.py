@@ -353,6 +353,12 @@ class SaniTrend:
 
         return None
 
+    def RebootPC():
+        platform = platform.system().lower()
+        if platform == 'windows':
+            os.system('shutdown /r /t 1')
+        elif platform == 'linux':
+            os.system('sudo reboot')
 
     def LogErrorToFile(self, name, error):
         errorTopDirectory = f'STCErrorLogs'

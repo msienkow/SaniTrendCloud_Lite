@@ -28,10 +28,23 @@ def main():
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
 
+                    # Update SaniTrend Watchdog Bit
+                    PLC.write('SaniTrend_Watchdog', SaniTrend.GetTagValue(TagData=SaniTrend.TagData, TagName='PLC_Watchdog'))
+
                 # Update parameters in PLC from Thingworx values in cloud
                 if not SaniTrend.ConfigUpdateRunning and SaniTrend.isConnected and SaniTrend.Virtual_Tag_Config:
                     PLC.write(SaniTrend.Virtual_Tag_Config)
-                    
+                
+                # Check if pc has reboot request
+                reboot = SaniTrend.GetTagValue(TagData=SaniTrend.TagData, TagName='Reboot')
+                if reboot:
+                    PLC.write('Reboot_Response', 2)
+                    runCode = False
+                    PLC.close()
+                    if not SaniTrend.Logging:
+                        time.sleep(2)
+                        SaniTrend.RebootPC()
+
             else:
                 PLC.open()
 
