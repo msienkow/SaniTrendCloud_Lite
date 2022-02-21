@@ -123,7 +123,8 @@ class SaniTrend:
             serviceResult = self._ConfigSession.post(url, headers=self._HttpHeaders, timeout=None)
             if serviceResult.status_code == 200:
                 self.Virtual_Tag_Config = []
-                rows = (serviceResult.json())['rows'][0]['PropertyConfig']['rows']
+                result = serviceResult.json()['rows'][0]
+                rows = result['PropertyConfig']['rows']
                 analog = 'ANALOG'
                 digital = 'DIGITAL'
                 
@@ -165,6 +166,25 @@ class SaniTrend:
                         TagNameTag = f'Digital_In_Tags[{propertyNumber}]' 
                         TagData = (TagNameTag, TagName)
                         self.Virtual_Tag_Config.append(TagData)
+                        
+                self.PLC_IPAddress = result['PLC_IPAddress']
+                self.PLC_Path = result['PLC_Path']
+                self.Virtual_AIn_Tag = result['Virtual_AIn_Tag']
+                self.Virtual_DIn_Tag = result['Virtual_DIn_Tag']
+                self.Virtual_String_Tag = result['Virtual_String_Tag']
+                self.Virtualize_AIn = result['Virtualize_AIn']
+                self.Virtualize_DIn = result['Virtualize_DIn']
+                self.Virtualize_String = result['Virtualize_String']
+                
+                self.Virtual_Tag_Config.append('PLC_IPAddress', self.PLC_IPAddress)
+                self.Virtual_Tag_Config.append('PLC_Path', self.PLC_Path)
+                self.Virtual_Tag_Config.append('Virtual_AIn_Tag', self.Virtual_AIn_Tag)
+                self.Virtual_Tag_Config.append('Virtual_DIn_Tag', self.Virtual_DIn_Tag)
+                self.Virtual_Tag_Config.append('Virtual_String_Tag', self.Virtual_String_Tag)
+                self.Virtual_Tag_Config.append('Virtualize_AIn', self.Virtualize_AIn)
+                self.Virtual_Tag_Config.append('Virtualize_DIn', self.Virtualize_DIn)
+                self.Virtual_Tag_Config.append('Virtualize_String', self.Virtualize_String)
+                
                 
         except Exception as e:
             self.LogErrorToFile('_GetVirtualSetupData', e)
