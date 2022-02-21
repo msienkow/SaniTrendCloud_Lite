@@ -120,7 +120,7 @@ class SaniTrend:
         '''Threaded method for getting property value configuration.'''
         url = f'{self.ServerURL}Services/GetPropertyValues'
         try:
-            serviceResult = self._ConfigSession.post(url, headers=self._HttpHeaders, timeout=5)
+            serviceResult = self._ConfigSession.post(url, headers=self._HttpHeaders, timeout=2)
             if serviceResult.status_code == 200:
                 self.Virtual_Tag_Config = []
                 rows = (serviceResult.json())['rows'][0]['PropertyConfig']['rows']
@@ -166,6 +166,9 @@ class SaniTrend:
                         TagData = (TagNameTag, TagName)
                         self.Virtual_Tag_Config.append(TagData)
 
+            else:
+                currentMS = self.GetTimeMS() + 30000
+                
         except Exception as e:
             self.LogErrorToFile('_GetVirtualSetupData', e)
 
@@ -219,16 +222,18 @@ class SaniTrend:
     def _ConnectionStatus(self,):
         url = 'http://localhost:8000/Thingworx/Things/LocalEms/Properties/isConnected'
         try:
-            serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders, timeout=5)
+            serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders, timeout=2)
             if serviceResult.status_code == 200:
                 self.isConnected = (serviceResult.json())['rows'][0]['isConnected']
 
             else:
                 self.LogErrorToFile('_ConnectionStatus', serviceResult)
+                
                 self.isConnected = False
         
         except Exception as e:
             self.isConnected = False
+            self._LastStatusUpdate = self.GetTimeMS() + 30000
             self.LogErrorToFile('_ConnectionStatus', e)
 
         # Release Bit so watchdog can run again
@@ -331,12 +336,12 @@ class SaniTrend:
         status_code = 0
         
         try:
-            http_response = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=5)
+            http_response = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True, timeout=2)
             if http_response.status_code == 200:
                status_code = http_response.status_code
 
             else:
-                # self.LogErrorToFile('_SendTwxData', http_response)
+                self.LogErrorToFile('_SendTwxData', http_response)
                 status_code =  http_response.status_code
 
         except Exception as e:
