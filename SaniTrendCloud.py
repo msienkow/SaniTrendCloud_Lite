@@ -356,7 +356,7 @@ class SaniTrend:
                 insert_query = ''' INSERT INTO sanitrend (TwxData, SentToTwx) VALUES (?,?); '''
                 sql_as_text = json.dumps(ThingworxData)
                 records.append((sql_as_text, False)) 
-                cur.execute(insert_query, records)
+                cur.executemany(insert_query, records)
                 db.commit()        
 
         except Exception as e:
