@@ -28,8 +28,13 @@ def main():
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
                     
-                    # Update SaniTrend Watchdog Bit
-                    PLC.write('SaniTrend_Watchdog', SaniTrend.GetTagValue(TagName='PLC_Watchdog'))
+                    # Update Communication Status
+                    comms = []
+                    watchdog = SaniTrend.GetTagValue(TagName='PLC_Watchdog')
+                    watchdog_data = ('SaniTrend_Watchdog', watchdog)
+                    twx_data = ('Twx_Alarm', not SaniTrend.isConnected)
+                    comms.extend((watchdog_data, twx_data))
+                    PLC.write(*comms)
                     
                 # Update parameters in PLC from Thingworx values in cloud
                 SaniTrend.GetVirtualSetupData()

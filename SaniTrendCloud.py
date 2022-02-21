@@ -30,9 +30,6 @@ class SaniTrend:
         self.Virtualize_DIn = 0
         self.Virtualize_String = 0
         self.Virtual_Tag_Config = []
-        self.Comms_Data = []
-        self.SaniTrend_Watchdog = False
-        self.PLC_Watchdog = False
 
         # Universal Properties
         self.PLCIPAddress = ''
