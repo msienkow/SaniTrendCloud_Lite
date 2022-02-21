@@ -25,6 +25,7 @@ def main():
                 
                 # Code to be run only while a connection to the PLC exists
                 while connected:
+                    connected = PLC.connected
                     PLCErrorCount = 0
                     scan_plc = SaniTrend.PLCScanTimerDN()               
                     if scan_plc:
@@ -47,7 +48,6 @@ def main():
                     if reboot:
                         PLC.write('Reboot_Response', 2)
                         runCode = False
-                        PLC.close()
                         if not SaniTrend.Logging:
                             time.sleep(2)
                             SaniTrend.RebootPC()
