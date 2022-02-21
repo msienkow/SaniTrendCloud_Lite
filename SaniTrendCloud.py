@@ -296,7 +296,7 @@ class SaniTrend:
             
             elif not self.isConnected:
                 self.Logging = True
-                threading.Thread(target=self._SendTwxData, args=(twx_data,)).start()
+                threading.Thread(target=self.LogTwxDataToDB, args=(twx_data,)).start()
 
         return None
 
@@ -379,14 +379,13 @@ class SaniTrend:
                 sql_as_text = json.dumps(ThingworxData)
                 records.append((sql_as_text, False)) 
                 cur.executemany(insert_query, records)
-                db.commit()        
+                db.commit()      
+                print('logged data to database')  
 
         except Exception as e:
             self.LogErrorToFile('LogTwxDataToDB', e)
 
         self.Logging = False
-
-        return None
 
     def RebootPC(self,):
         platform = self._OS.lower()

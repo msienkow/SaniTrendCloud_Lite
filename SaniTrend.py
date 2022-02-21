@@ -8,6 +8,7 @@ def main():
     
     # Setup PLC Communication Driver
     PLC = LogixDriver(SaniTrend.PLCIPAddress)
+
     PLCErrorCount = 0
     
     runCode = True
@@ -32,7 +33,6 @@ def main():
                     
                 # Update parameters in PLC from Thingworx values in cloud
                 SaniTrend.GetVirtualSetupData()
-                
                 if not SaniTrend.ConfigUpdateRunning and SaniTrend.isConnected and SaniTrend.Virtual_Tag_Config:
                     PLC.write(*SaniTrend.Virtual_Tag_Config)
 
