@@ -247,11 +247,12 @@ class SaniTrend:
             serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders, timeout=None)
             if serviceResult.status_code == 200:
                 self.isConnected = (serviceResult.json())['rows'][0]['isConnected']
+                if not self.isConnected:
+                    print('D I S C O N N E C T E D')
 
             else:
                 self.LogErrorToFile('_ConnectionStatus', serviceResult)
                 self.isConnected = False
-                print('D I S C O N N E C T E D')
         
         except Exception as e:
             self.isConnected = False
@@ -385,7 +386,6 @@ class SaniTrend:
                 records.append((sql_as_text, False)) 
                 cur.executemany(insert_query, records)
                 db.commit()      
-                print('logged data to database')  
 
         except Exception as e:
             self.LogErrorToFile('LogTwxDataToDB', e)
