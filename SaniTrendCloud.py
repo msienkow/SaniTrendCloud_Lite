@@ -128,30 +128,43 @@ class SaniTrend:
                 digital = 'DIGITAL'
 
                 for dict in rows:
+                    PropertyName = ''
+                    TagName = ''
+                    EUMin = 0
+                    EUMax = 1
+                    Units = ''
+                    
                     for key,value in dict.items:
-                        PropertyName = ''
-                        PropertyType = ''
-                        PropertyNumber = -9999
-                        # if key == 'PropertyName':
-                        #     nameParts = value.split('_')
-                        #     propertyType = nameParts[0]
-                        #     propertyNumber = int(nameParts[len(nameParts) - 1]) - 1
-                        
-                        # if propertyType.upper() in analog:
-                        #     tagNameTag = f'Analog_In_Tags[{propertyNumber}]'
-                        #     tagData = (tagNameTag, tagName)
-                        #     EUMinTag = f'Analog_In_Min[{propertyNumber}]'
-                        #     EUMinData = (EUMinTag, EUMinVal)
-                        #     EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
-                        #     EUMaxData = (EUMaxTag, EUMaxVal)
-                        #     UnitsTag = f'Analog_In_Units[{propertyNumber}]'
-                        #     UnitsData = (UnitsTag, UnitsVal)
-                        #     self.Virtual_Tag_Config.extend((tagData, EUMinData, EUMaxData, UnitsData))
+                        if key == 'PropertyName':
+                            PropertyName = value
+                        if key == 'TagName':
+                            TagName = value
+                        if key == 'EUMin':
+                            EUMin = value
+                        if key == 'EUMax':
+                            EUMax = value
+                        if key == 'Units':
+                            Units = value
+                    
+                    nameParts = PropertyName.split('_')
+                    propertyType = nameParts[0]
+                    propertyNumber = int(nameParts[len(nameParts) - 1]) - 1
+                
+                    if propertyType.upper() in analog:
+                        TagNameTag = f'Analog_In_Tags[{propertyNumber}]'
+                        TagData = (TagNameTag, TagName)
+                        EUMinTag = f'Analog_In_Min[{propertyNumber}]'
+                        EUMinData = (EUMinTag, EUMin)
+                        EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
+                        EUMaxData = (EUMaxTag, EUMax)
+                        UnitsTag = f'Analog_In_Units[{propertyNumber}]'
+                        UnitsData = (UnitsTag, Units)
+                        self.Virtual_Tag_Config.extend((TagData, EUMinData, EUMaxData, UnitsData))
 
-                        # if propertyType.upper() in digital:
-                        #     tagNameTag = f'Digital_In_Tags[{propertyNumber}]' 
-                        #     tagData = (tagNameTag, tagName)
-                        #     self.Virtual_Tag_Config.append(tagData)
+                    if propertyType.upper() in digital:
+                        TagNameTag = f'Digital_In_Tags[{propertyNumber}]' 
+                        TagData = (TagNameTag, TagName)
+                        self.Virtual_Tag_Config.append(TagData)
 
         except Exception as e:
             self.LogErrorToFile('_GetVirtualSetupData', e)
@@ -353,8 +366,8 @@ class SaniTrend:
 
         return None
 
-    def RebootPC():
-        platform = platform.system().lower()
+    def RebootPC(self,):
+        platform = self._OS.lower()
         if platform == 'windows':
             os.system('shutdown /r /t 1')
         elif platform == 'linux':
