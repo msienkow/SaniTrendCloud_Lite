@@ -15,21 +15,27 @@ def main():
         try:
             # Get Connection Status For EMS
             SaniTrend.ConnectionStatus()
+            
             if PLC.connected:
                 PLCErrorCount = 0
-                scan_plc = SaniTrend.PLCScanTimerDN()               
+                scan_plc = SaniTrend.PLCScanTimerDN()  
+                             
                 if scan_plc:
                     # Read PLC tags
                     SaniTrend.TagData = PLC.read(*SaniTrend.Tags)
                     
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
+                    
                     # Update SaniTrend Watchdog Bit
                     PLC.write('SaniTrend_Watchdog', SaniTrend.GetTagValue(TagName='PLC_Watchdog'))
+                    
                 # Update parameters in PLC from Thingworx values in cloud
                 SaniTrend.GetVirtualSetupData()
+                
                 if not SaniTrend.ConfigUpdateRunning and SaniTrend.isConnected and SaniTrend.Virtual_Tag_Config:
                     PLC.write(*SaniTrend.Virtual_Tag_Config)
+                    print(SaniTrend.Virtual_Tag_Config)
 
                 # Check if pc has reboot request
                 reboot = SaniTrend.GetTagValue(TagName='Reboot')
@@ -42,6 +48,7 @@ def main():
                         SaniTrend.RebootPC()
             else:
                 PLC.open()
+                
             # Send in-memory data to Thingworx
             if len(SaniTrend.TwxDataRows) > 0:
                 SaniTrend.SendDataToTwx()
