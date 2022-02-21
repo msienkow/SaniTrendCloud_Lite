@@ -66,10 +66,11 @@ def main():
             PLC.close()
             runCode = False
         except Exception as error:
-            print(error)
-            print('Shutting Down...')
+            print(f'Critical Error: {error} Restarting Code in 30 Seconds...')
             PLC.close()
             SaniTrend.LogErrorToFile('Final Exception', error)
+            time.sleep(30)
+            PLC = LogixDriver(SaniTrend.PLCIPAddress)
             # runCode = False
 if __name__ == "__main__":
     main()
