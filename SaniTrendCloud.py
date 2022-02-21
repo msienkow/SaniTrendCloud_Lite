@@ -176,14 +176,14 @@ class SaniTrend:
                 self.Virtualize_DIn = result['Virtualize_DIn']
                 self.Virtualize_String = result['Virtualize_String']
                 
-                self.Virtual_Tag_Config.append('PLC_IPAddress', self.PLC_IPAddress)
-                self.Virtual_Tag_Config.append('PLC_Path', self.PLC_Path)
-                self.Virtual_Tag_Config.append('Virtual_AIn_Tag', self.Virtual_AIn_Tag)
-                self.Virtual_Tag_Config.append('Virtual_DIn_Tag', self.Virtual_DIn_Tag)
-                self.Virtual_Tag_Config.append('Virtual_String_Tag', self.Virtual_String_Tag)
-                self.Virtual_Tag_Config.append('Virtualize_AIn', self.Virtualize_AIn)
-                self.Virtual_Tag_Config.append('Virtualize_DIn', self.Virtualize_DIn)
-                self.Virtual_Tag_Config.append('Virtualize_String', self.Virtualize_String)
+                self.Virtual_Tag_Config.append(('PLC_IPAddress', self.PLC_IPAddress))
+                self.Virtual_Tag_Config.append(('PLC_Path', self.PLC_Path))
+                self.Virtual_Tag_Config.append(('Virtual_AIn_Tag', self.Virtual_AIn_Tag))
+                self.Virtual_Tag_Config.append(('Virtual_DIn_Tag', self.Virtual_DIn_Tag))
+                self.Virtual_Tag_Config.append(('Virtual_String_Tag', self.Virtual_String_Tag))
+                self.Virtual_Tag_Config.append(('Virtualize_AIn', self.Virtualize_AIn))
+                self.Virtual_Tag_Config.append(('Virtualize_DIn', self.Virtualize_DIn))
+                self.Virtual_Tag_Config.append(('Virtualize_String', self.Virtualize_String))
                 
                 
         except Exception as e:

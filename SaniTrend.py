@@ -35,7 +35,6 @@ def main():
                 
                 if not SaniTrend.ConfigUpdateRunning and SaniTrend.isConnected and SaniTrend.Virtual_Tag_Config:
                     PLC.write(*SaniTrend.Virtual_Tag_Config)
-                    print(SaniTrend.Virtual_Tag_Config)
 
                 # Check if pc has reboot request
                 reboot = SaniTrend.GetTagValue(TagName='Reboot')
