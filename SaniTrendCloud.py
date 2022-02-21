@@ -120,7 +120,7 @@ class SaniTrend:
         '''Threaded method for getting property value configuration.'''
         url = f'{self.ServerURL}Services/GetPropertyValues'
         try:
-            serviceResult = self._ConfigSession.post(url, headers=self._HttpHeaders)
+            serviceResult = self._ConfigSession.post(url, headers=self._HttpHeaders, timeout=None)
             if serviceResult.status_code == 200:
                 self.Virtual_Tag_Config = []
                 rows = (serviceResult.json())['rows'][0]['PropertyConfig']['rows']
@@ -219,7 +219,7 @@ class SaniTrend:
     def _ConnectionStatus(self,):
         url = 'http://localhost:8000/Thingworx/Things/LocalEms/Properties/isConnected'
         try:
-            serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders)
+            serviceResult = self._ConnectionStatusSession.get(url, headers=self._HttpHeaders, timeout=None)
             if serviceResult.status_code == 200:
                 self.isConnected = (serviceResult.json())['rows'][0]['isConnected']
 
@@ -333,7 +333,7 @@ class SaniTrend:
         status_code = 0
         
         try:
-            http_response = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, verify=True)
+            http_response = self._ThingworxSession.post(url, headers=self._HttpHeaders, json=thingworx_json, timeout=None)
             if http_response.status_code == 200:
                status_code = http_response.status_code
 
