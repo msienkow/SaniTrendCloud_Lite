@@ -34,7 +34,7 @@ def main():
                 # Update parameters in PLC from Thingworx values in cloud
                 SaniTrend.GetVirtualSetupData()
                 if not SaniTrend.ConfigUpdateRunning and SaniTrend.isConnected and SaniTrend.Virtual_Tag_Config:
-                    PLC.write(SaniTrend.Virtual_Tag_Config)
+                    PLC.write(*SaniTrend.Virtual_Tag_Config)
                 
                 # Check if pc has reboot request
                 reboot = SaniTrend.GetTagValue(TagName='Reboot')
