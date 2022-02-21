@@ -126,15 +126,15 @@ class SaniTrend:
                 rows = (serviceResult.json())['rows'][0]['PropertyConfig']['rows']
                 analog = 'ANALOG'
                 digital = 'DIGITAL'
-
-                for dict in rows:
+                
+                for props in rows:
                     PropertyName = ''
                     TagName = ''
                     EUMin = 0
                     EUMax = 1
-                    Units = ''
+                    EUUnits = ''
                     
-                    for key,value in dict.items:
+                    for key,value in props.items:
                         if key == 'PropertyName':
                             PropertyName = value
                         if key == 'TagName':
@@ -144,7 +144,7 @@ class SaniTrend:
                         if key == 'EUMax':
                             EUMax = value
                         if key == 'Units':
-                            Units = value
+                            EUUnits = value
                     
                     nameParts = PropertyName.split('_')
                     propertyType = nameParts[0]
@@ -158,7 +158,7 @@ class SaniTrend:
                         EUMaxTag = f'Analog_In_Max[{propertyNumber}]'
                         EUMaxData = (EUMaxTag, EUMax)
                         UnitsTag = f'Analog_In_Units[{propertyNumber}]'
-                        UnitsData = (UnitsTag, Units)
+                        UnitsData = (UnitsTag, EUUnits)
                         self.Virtual_Tag_Config.extend((TagData, EUMinData, EUMaxData, UnitsData))
 
                     if propertyType.upper() in digital:
