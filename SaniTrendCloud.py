@@ -30,12 +30,16 @@ class SaniTrend:
         self.Virtualize_DIn = 0
         self.Virtualize_String = 0
         self.Virtual_Tag_Config = []
+        self.Comms_Data = []
+        self.SaniTrend_Watchdog = False
+        self.PLC_Watchdog = False
 
         # Universal Properties
         self.PLCIPAddress = ''
         self.PLCScanRate = 1000
         self.Tags = []
         self.ServerURL = ''
+        self.ServerSeconds = 0
         self.SMINumber = ''
         self.ConnectionStatusTime = 2
         self.isConnected = False
@@ -47,6 +51,7 @@ class SaniTrend:
         self._ConnectionStatusSession = requests.Session()
         self._ThingworxSession = requests.Session()
         self._ConfigSession = requests.Session()
+        self._ServerStatusSession = requests.Session()
         self._OS = platform.system()
         self._HttpHeaders = {
             'Connection': 'keep-alive',
@@ -245,8 +250,8 @@ class SaniTrend:
 
             else:
                 self.LogErrorToFile('_ConnectionStatus', serviceResult)
-                
                 self.isConnected = False
+                print('D I S C O N N E C T E D')
         
         except Exception as e:
             self.isConnected = False
