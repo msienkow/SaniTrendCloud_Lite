@@ -134,7 +134,7 @@ class SaniTrend:
                     EUMax = 1
                     EUUnits = ''
                     
-                    for key,value in props.items:
+                    for key,value in props.items():
                         if key == 'PropertyName':
                             PropertyName = value
                         if key == 'TagName':
