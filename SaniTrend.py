@@ -63,6 +63,7 @@ def main():
             SaniTrend.LogErrorToFile('PLC Comms Failed', CommError)
             if PLCErrorCount < 6:
                 time.sleep(10)
+                PLC = LogixDriver(SaniTrend.PLCIPAddress)
             else:
                 time.sleep(30)
             PLC = LogixDriver(SaniTrend.PLCIPAddress)
