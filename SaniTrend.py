@@ -2,29 +2,25 @@ import SaniTrendCloud
 import time
 from pycomm3 import LogixDriver
 from pycomm3.exceptions import CommError
+
 def main():
     # Set up SaniTrend parameters, tags, cloud configurations, etc...
     SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
-    
     # Setup PLC Communication Driver
     PLC = LogixDriver(SaniTrend.PLCIPAddress)
-
     PLCErrorCount = 0
-    
     runCode = True
     while runCode:
         try:
             # Get Connection Status For EMS
             SaniTrend.ConnectionStatus()
-            
             if PLC.connected:
                 PLCErrorCount = 0
                 scan_plc = SaniTrend.PLCScanTimerDN()  
                              
                 if scan_plc:
                     # Read PLC tags
-                    SaniTrend.TagData = PLC.read(*SaniTrend.Tags)
-                    
+                    SaniTrend.TagData = PLC.read(*SaniTrend.Tags) 
                     # Store Data to in-memory Log
                     SaniTrend.LogData()
                     
@@ -64,13 +60,16 @@ def main():
             if PLCErrorCount < 6:
                 time.sleep(10)
                 PLC = LogixDriver(SaniTrend.PLCIPAddress)
+            
             else:
                 time.sleep(30)
             PLC = LogixDriver(SaniTrend.PLCIPAddress)
+            
         except KeyboardInterrupt:
             print("\n\nExiting Python and closing PLC connection...\n\n\n")
             PLC.close()
             runCode = False
+            
         except Exception as error:
             print(f'Critical Error: {error} Restarting Code in 30 Seconds...')
             PLC.close()
@@ -78,5 +77,6 @@ def main():
             time.sleep(30)
             PLC = LogixDriver(SaniTrend.PLCIPAddress)
             # runCode = False
+            
 if __name__ == "__main__":
     main()
