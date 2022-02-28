@@ -5,7 +5,7 @@ from pycomm3.exceptions import CommError
 
 def main():
     # Set up SaniTrend parameters, tags, cloud configurations, etc...
-    SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="../SaniTrendConfig.json")
+    SaniTrend = SaniTrendCloud.SaniTrend(ConfigFile="SaniTrendConfig.json")
     # Setup PLC Communication Driver
     PLC = LogixDriver(SaniTrend.PLCIPAddress)
     PLCErrorCount = 0
