@@ -3,26 +3,12 @@ Description=SaniTrend Cloud Lite
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 script.py
-WorkingDirectory=/path/to/scriptdir
+ExecStart=/usr/bin/python3 /home/sanimatic/SaniTrendCloud_Lite/SaniTrend.py
+WorkingDirectory=/home/sanimatic/SaniTrendCloud_Lite/
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
 User=sanimatic
-
-[Install]
-WantedBy=multi-user.target
-
-
-[Unit]
-Description=Sanitrend Cloud
-After=multi-user.target
-
-[Service]
-WorkingDirectory=/home/pi/SaniTrendCloud_Lite
-User=pi
-ExecStart=/usr/bin/python3 /home/pi/SaniTrendCloud_Lite/SaniTrend.py
-Restart=always
 
 [Install]
 WantedBy=multi-user.target
