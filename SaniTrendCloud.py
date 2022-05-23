@@ -144,8 +144,12 @@ class SaniTrend:
                             TagName = value
                         if key == 'EUMin':
                             EUMin = value
+                            if EUMin == '':
+                                EUMin = 0
                         if key == 'EUMax':
                             EUMax = value
+                            if EUMax = '':
+                                EUMax = 1
                         if key == 'Units':
                             EUUnits = value
                     
