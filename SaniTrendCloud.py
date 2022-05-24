@@ -148,7 +148,7 @@ class SaniTrend:
                                 EUMin = 0
                         if key == 'EUMax':
                             EUMax = value
-                            if EUMax = '':
+                            if EUMax == '':
                                 EUMax = 1
                         if key == 'Units':
                             EUUnits = value
