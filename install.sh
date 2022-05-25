@@ -34,7 +34,7 @@ while $shouldloop; do
     echo -n "Please enter application key: "
     read applicationKey
     clear
-    echo -n "Is $applicationKey the correct IP Address (y/n)?: "
+    echo -n "Is $applicationKey the correct application key (y/n)?: "
     read answer
     if [ "$answer" != "${answer#[Yy]}" ]; then
         shouldloop=false;
