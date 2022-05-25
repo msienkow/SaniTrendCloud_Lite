@@ -1,2 +1,0 @@
-create systemd service file
-modify sudoers file

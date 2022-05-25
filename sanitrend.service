@@ -9,6 +9,7 @@ StandardOutput=inherit
 StandardError=inherit
 Restart=always
 User=sanimatic
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
