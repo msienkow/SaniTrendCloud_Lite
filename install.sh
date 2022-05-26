@@ -58,7 +58,6 @@ while $shouldloop; do
     fi
 done
 
-
 # Change SSH settings
 clear
 echo "Modifying SSH settings..."
@@ -84,118 +83,15 @@ echo "Downloading SaniTrend Cloud Repository..."
 git clone https://github.com/msienkow/SaniTrendCloud_Lite.git
 cd SaniTrendCloud_Lite
 
+# SaniTrend Config File
+echo "Creating SaniTrend Cloud configuration file..."
+sed -i s"|PLC_IP_Address|$PLCIP|g" SaniTrendConfig.json
+sed -i s"|ThingName|$SMINumber|g" SaniTrendConfig.json
+
 # Install python 3 requirements
 clear
 echo "Installing python3 required libraries..."
 sudo pip3 install -r requirements.txt
-
-# SaniTrend Config File
-echo "Creating SaniTrend Cloud configuration file..."
-echo "{" >> SaniTrendConfig.json
-echo "    \"Config\": {" >> SaniTrendConfig.json
-echo "        \"PLCIPAddress\": \"$PLCIP\"," >> SaniTrendConfig.json
-echo "        \"PLCScanRate\": \"1000\"," >> SaniTrendConfig.json
-echo "        \"SMINumber\": \"$SMINumber\"" >> SaniTrendConfig.json
-echo "    }," >> SaniTrendConfig.json
-echo "    \"Tags\": [" >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_1\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_2\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_3\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_4\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_5\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_6\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_7\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Analog_In_8\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"NUMBER\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_1\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_2\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_3\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_4\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_5\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_6\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_7\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_8\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_9\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_10\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_11\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Digital_In_12\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"SaniTrend_Watchdog\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"PLC_Watchdog\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Reboot\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"BOOLEAN\"" >> SaniTrendConfig.json
-echo "        }," >> SaniTrendConfig.json
-echo "        {" >> SaniTrendConfig.json
-echo "            \"tag\": \"Recipe\"," >> SaniTrendConfig.json
-echo "            \"twxtype\": \"STRING\"" >> SaniTrendConfig.json
-echo "        }" >> SaniTrendConfig.json
-echo "    ]" >> SaniTrendConfig.json
-echo "}" >> SaniTrendConfig.json
 
 # Enable any user to reboot computer
 echo "Applying settings to allow any user to reboot the system..."
