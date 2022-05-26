@@ -68,42 +68,40 @@ echo "\n\n\nInstalling Prerequisite programs..."
 sudo apt install -y git curl wget zip unzip python3 python3-pip
 
 # Clone SaniTrend Cloud github repository
-clear
-echo "Downloading SaniTrend Cloud Repository..."
+echo "\n\n\nDownloading SaniTrend Cloud Repository..."
 git clone https://github.com/msienkow/SaniTrendCloud_Lite.git
 cd SaniTrendCloud_Lite
 
 # SaniTrend Config File
-echo "Creating SaniTrend Cloud configuration file..."
+echo "\n\n\nCreating SaniTrend Cloud configuration file..."
 sed -i s"|PLC_IP_Address|$PLCIP|g" SaniTrendConfig.json
 sed -i s"|ThingName|$SMINumber|g" SaniTrendConfig.json
 
 # Install python 3 requirements
-clear
-echo "Installing python3 required libraries..."
+echo "\n\n\nInstalling python3 required libraries..."
 sudo pip3 install -r requirements.txt
 
 # Enable any user to reboot computer
-echo "Applying settings to allow any user to reboot the system..."
+echo "\n\n\nApplying settings to allow any user to reboot the system..."
 chmod +x sudoers.sh
 sudo ./sudoers.sh
 
 # Change SSH settings
-clear
-echo "Modifying SSH settings..."
+
+echo "\n\n\nModifying SSH settings..."
 chmod +x ssh.sh
 sudo ./ssh.sh
 echo "Restarting ssh daemon..."
 sudo systemctl restart ssh
 
 # Dowload/Configure Thingworx Edge Microserver
-echo "Downloading Thingworx Edge Microserver..."
+echo "\n\n\nDownloading Thingworx Edge Microserver..."
 wget -O microserver.zip $serverDownload
 unzip microserver.zip
 rm microserver.zip
 
 # Install Thingworx Edge Microserver
-echo "Installing Thingworx Edge Microserver..."
+echo "\n\n\nInstalling Thingworx Edge Microserver..."
 cd microserver
 chmod +x wsems
 echo "Encrypting Application Key..."
@@ -117,7 +115,7 @@ sudo ./install
 cd ../..
 
 # Setup Thinworx Edge Microserver for automatic Systemd Service
-echo "Installing SaniTrend Cloud Systemd service..."
+echo "\n\n\nInstalling SaniTrend Cloud Systemd service..."
 sudo cp sanitrend.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable sanitrend.service
