@@ -51,21 +51,12 @@ while $shouldloop; do
     read answer
     if [ "$answer" != "${answer#[Yy]}" ]; then
         server="sanimatic-prod1.cloud.thingworx.com"
-        serverDownload="https://sanimatic-dev.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/linuxmicroserver.zip?appKey=9f09c4f6-14f6-44b7-b90d-73a7e2f0e6ef"
+        serverDownload="https://sanimatic-prod1.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/linuxmicroserver.zip?appKey=9f09c4f6-14f6-44b7-b90d-73a7e2f0e6ef"
         shouldloop=false;
     else
         shouldloop=false;
     fi
 done
-
-# Change SSH settings
-clear
-echo "Modifying SSH settings..."
-sudo echo "TCPKeepAlive no" >> /etc/ssh/sshd_config
-sudo echo "ClientAliveInterval 30" >> /etc/ssh/sshd_config
-sudo echo "ClientAliveCountMax 60" >> /etc/ssh/sshd_config
-echo "Restarting ssh daemon..."
-sudo systemctl restart ssh
 
 # Update the system
 clear
@@ -73,8 +64,7 @@ echo "Updating the system..."
 sudo apt update && sudo apt upgrade -y
 
 # Install Prerequisite Programs
-clear
-echo "Installing Prerequisite programs..."
+echo "\n\n\nInstalling Prerequisite programs..."
 sudo apt install -y git curl wget zip unzip python3 python3-pip
 
 # Clone SaniTrend Cloud github repository
@@ -98,6 +88,14 @@ echo "Applying settings to allow any user to reboot the system..."
 chmod +x sudoers.sh
 sudo ./sudoers.sh
 
+# Change SSH settings
+clear
+echo "Modifying SSH settings..."
+chmod +x ssh.sh
+sudo ./ssh.sh
+echo "Restarting ssh daemon..."
+sudo systemctl restart ssh
+
 # Dowload/Configure Thingworx Edge Microserver
 echo "Downloading Thingworx Edge Microserver..."
 wget -O microserver.zip $serverDownload
@@ -113,8 +111,10 @@ key=`./wsems -encrypt $applicationKey | sed -n '3{p;q}'`
 sed -i s"|ServerURL|$server|g" etc/config.json
 sed -i s"|ApplicationKey|$key|g" etc/config.json
 sed -i s"|ThingName|$SMINumber|g" etc/config.json
-chmod +x install_services/install
-./install_services/install
+cd install_services
+chmod +x install
+sudo ./install
+cd ../..
 
 # Setup Thinworx Edge Microserver for automatic Systemd Service
 echo "Installing SaniTrend Cloud Systemd service..."
