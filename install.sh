@@ -51,7 +51,7 @@ while $shouldloop; do
     read answer
     if [ "$answer" != "${answer#[Yy]}" ]; then
         server="sanimatic-prod1.cloud.thingworx.com"
-        serverDownload="https://sanimatic-prod1.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/linuxmicroserver.zip?appKey=9f09c4f6-14f6-44b7-b90d-73a7e2f0e6ef"
+        serverDownload="https://sanimatic-prod1.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/linuxmicroserver.zip?appKey=6234b184-ad06-470d-b648-55833f414343"
         shouldloop=false;
     else
         shouldloop=false;
