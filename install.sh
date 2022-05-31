@@ -122,3 +122,6 @@ sudo systemctl enable sanitrend.service
 sudo systemctl start sanitrend.service
 
 # End of Script
+echo "\n\n\n***********************************************"
+echo "**** SaniTrend Lite Installation Complete *****"
+echo "***********************************************\n\n\n"
