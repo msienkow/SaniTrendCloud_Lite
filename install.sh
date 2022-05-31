@@ -65,7 +65,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Install Prerequisite Programs
 echo "\n\n\nInstalling Prerequisite programs..."
-sudo apt install -y git curl wget zip unzip python3 python3-pip
+sudo apt install -y git curl wget zip unzip python3 python3-pip sqlite3
 
 # Clone SaniTrend Cloud github repository
 echo "\n\n\nDownloading SaniTrend Cloud Repository..."
