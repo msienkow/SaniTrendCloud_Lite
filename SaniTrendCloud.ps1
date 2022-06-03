@@ -200,7 +200,20 @@ if ($answer -eq 6) {
     (Get-Content $pwd\microserver\etc\config.json) -replace 'ApplicationKey', $key | Set-Content $pwd\microserver\etc\config.json
     (Get-Content $pwd\microserver\etc\config.json) -replace 'ServerURL', $server | Set-Content $pwd\microserver\etc\config.json
     (Get-Content $pwd\microserver\etc\config.json) -replace 'ThingName', $SMINumber | Set-Content $pwd\microserver\etc\config.json
-    .\$pwd\microserver\install_services\install.bat
+    $WSEMS_NAME = "Thingworx_WSEMS"
+    [String]$binPath = "$pwd\microserver\wsems.exe"
+    [String]$configPath = "$pwd\microserver\etc\config.json"
+    $service = Get-Service -Name $WSEMS_NAME -ErrorAction SilentlyContinue
+    if($service -ne $null)
+    {
+        cmd /c "sc delete " + $WSEMS_NAME
+    }
+    cmd /c "sc create " + $WSEMS_NAME + " binPath= " + $binPath + " -service -cfg " + $configPath + " DispalyName= " + $WSEMS_NAME + " start= auto"
+    net start $WSEMS_NAME
+
+    
+    
+
 
 
 
