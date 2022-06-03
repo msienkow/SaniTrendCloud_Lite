@@ -148,7 +148,7 @@ if ($answer -eq 6) {
     # Select Production or Development Server
     clear
     $loop = $true
-    $serverDownload = 'https://sanimatic-dev.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/linuxmicroserver.zip?appKey=9f09c4f6-14f6-44b7-b90d-73a7e2f0e6ef'
+    $serverDownload = 'https://sanimatic-dev.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/microserver.zip?appKey=9f09c4f6-14f6-44b7-b90d-73a7e2f0e6ef'
     $server = 'sanimatic-dev.cloud.thingworx.com'
     DO {
         clear
@@ -157,7 +157,7 @@ if ($answer -eq 6) {
         $decision = $Host.UI.PromptForChoice($title, $question, $choices, 0)
         if ($decision -eq 0) {
             $server = 'sanimatic-prod1.cloud.thingworx.com'
-            $serverDownload = 'https://sanimatic-prod1.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/linuxmicroserver.zip?appKey=6234b184-ad06-470d-b648-55833f414343'
+            $serverDownload = 'https://sanimatic-prod1.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/microserver.zip?appKey=6234b184-ad06-470d-b648-55833f414343'
             $loop = $False
         } else {
             $loop = $False
@@ -185,6 +185,24 @@ if ($answer -eq 6) {
     Remove-Item SaniTrendCloud.ps1
     Remove-Item ssh.sh
     Remove-Item sudoers.sh
+    Move-Item -Path $pwd\SaniTrendCloud.py -Destination $pwd\STC_Lite_Win
+    Move-Item -Path $pwd\SaniTrend.py -Destination $pwd\STC_Lite_Win
+    Move-Item -Path $pwd\SaniTrendConfig.json -Destination $pwd\STC_Lite_Win
+
+    # SaniTrend Configuration File Setup
+    (Get-Content $pwd\STC_Lite_Win\SaniTrendConfig.json) -replace 'PLC_IP_Address', $PLCIP | Set-Content $pwd\STC_Lite_Win\SaniTrendConfig.json
+    (Get-Content $pwd\STC_Lite_Win\SaniTrendConfig.json) -replace 'ThingName', $SMINumber | Set-Content $pwd\STC_Lite_Win\SaniTrendConfig.json
+
+    # Edge Microserver Configuration and Setup
+    $encrypt = .\microserver\wsems -encrypt $applicationKey
+    $keysplit = $encrypt.split()
+    $key = $keysplit[3]
+    (Get-Content $pwd\microserver\etc\config.json) -replace 'ApplicationKey', $key | Set-Content $pwd\microserver\etc\config.json
+    (Get-Content $pwd\microserver\etc\config.json) -replace 'ServerURL', $server | Set-Content $pwd\microserver\etc\config.json
+    (Get-Content $pwd\microserver\etc\config.json) -replace 'ThingName', $SMINumber | Set-Content $pwd\microserver\etc\config.json
+    .\$pwd\microserver\install_services\install.bat
+
+
 
     # PowerShell.exe -NoProfile -Command "& {Start-Process PowerShell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File ""$pwd\PythonTask.ps1""' -Verb RunAs}"
 
