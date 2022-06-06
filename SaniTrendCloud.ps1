@@ -194,23 +194,28 @@ if ($answer -eq 6) {
     (Get-Content $pwd\STC_Lite_Win\SaniTrendConfig.json) -replace 'ThingName', $SMINumber | Set-Content $pwd\STC_Lite_Win\SaniTrendConfig.json
 
     # Edge Microserver Configuration and Setup
-    $encrypt = .\microserver\wsems -encrypt $applicationKey
-    $keysplit = $encrypt.split()
-    $key = $keysplit[3]
-    (Get-Content $pwd\microserver\etc\config.json) -replace 'ApplicationKey', $key | Set-Content $pwd\microserver\etc\config.json
+    (Get-Content $pwd\microserver\etc\config.json) -replace 'ApplicationKey', $applicationKey | Set-Content $pwd\microserver\etc\config.json
     (Get-Content $pwd\microserver\etc\config.json) -replace 'ServerURL', $server | Set-Content $pwd\microserver\etc\config.json
     (Get-Content $pwd\microserver\etc\config.json) -replace 'ThingName', $SMINumber | Set-Content $pwd\microserver\etc\config.json
     $WSEMS_NAME = "Thingworx_WSEMS"
-    [String]$binPath = "$pwd\microserver\wsems.exe"
     [String]$configPath = "$pwd\microserver\etc\config.json"
+    [String]$binPath = """$pwd\microserver\wsems.exe"" -service -cfg ""$configPath"""
     $service = Get-Service -Name $WSEMS_NAME -ErrorAction SilentlyContinue
     if($service -ne $null)
     {
         cmd /c "sc delete " + $WSEMS_NAME
     }
-    cmd /c "sc create " + $WSEMS_NAME + " binPath= " + $binPath + " -service -cfg " + $configPath + " DispalyName= " + $WSEMS_NAME + " start= auto"
-    net start $WSEMS_NAME
 
+    $serviceParams = @{
+        Name = $WSEMS_NAME
+		BinaryPathName = $binPath
+		DisplayName = $WSEMS_NAME
+		StartupType = "auto"
+		Description = "Thingworx Edge Microserver"
+    }
+
+    New-Service @serviceParams
+    net start $WSEMS_NAME
     
     
 
