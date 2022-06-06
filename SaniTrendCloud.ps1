@@ -1,11 +1,11 @@
 # Installer for SaniTrend™ Cloud Lite
+Add-Type -AssemblyName PresentationCore,PresentationFramework
 
 # Set Execution Policy for Powershell Scripts
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
 
 
-
-
+# Download Github Respoitory
 function DownloadGitHubRepository 
 { 
     param( 
@@ -43,6 +43,7 @@ function DownloadGitHubRepository
     Remove-Item -Path $ZipFile -Force 
 }
 
+# Download Thingworx Edge Microserver from Thingworx File Repository
 function DownloadMicroServer
 { 
     param( 
@@ -203,7 +204,7 @@ if ($answer -eq 6) {
     $service = Get-Service -Name $WSEMS_NAME -ErrorAction SilentlyContinue
     if($service -ne $null)
     {
-        cmd /c "sc delete " + $WSEMS_NAME
+        sc.exe delete + $WSEMS_NAME
     }
 
     $serviceParams = @{
@@ -218,16 +219,22 @@ if ($answer -eq 6) {
     net start $WSEMS_NAME
     
     
+    # SaniTrend Service Setup
+    $sanitrendPath = "$PSScriptRoot\SaniTrendCloud_Lite-main\STC_Lite_Win"
+    $batPath = "$sanitrendPath\sanitrend.bat"
+    $pythonPath = "$sanitrendPath\python.exe"
+    $sanitrendFile = "$sanitrendPath\SaniTrend.py"
+    New-Item $batPath
+    Set-Content -Path $batPath -value "call $pythonPath $sanitrendFile"
+    Set-Location -Path $sanitrendPath
+    .\nssm.exe install SaniTrendCloud "$batPath"
+    .\nssm.exe start SaniTrendCloud
 
-
-
-
-    # PowerShell.exe -NoProfile -Command "& {Start-Process PowerShell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File ""$pwd\PythonTask.ps1""' -Verb RunAs}"
+    $msgBody = "SaniTrend Cloud installation complete."
+    [System.Windows.MessageBox]::Show($msgBody,"SaniTrend Cloud Installer", 0,0)
 
 } else {
-    
     Exit
-
 }
 
 Exit
