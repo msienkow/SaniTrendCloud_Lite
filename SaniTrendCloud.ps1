@@ -25,7 +25,7 @@ function DownloadGitHubRepository
     # Force to create a zip file 
     $ZipFile = "$location\SaniTrendCloud.zip" 
     New-Item $ZipFile -ItemType File -Force
-
+    
     $RepositoryZipUrl = "https://github.com/msienkow/SaniTrendCloud_Lite/archive/refs/heads/main.zip"
 
     # download the zip 
@@ -101,13 +101,13 @@ $answer = $wshell.Popup("Do you want to install SaniTrend Cloud?",0,"SaniTrend C
 
 if ($answer -eq 6) {
     # Get SMI Number from user
-    clear
+    Clear-Host
     $choices  = '&Yes', '&No'
     $loop = $true
     DO {
-        clear
+        Clear-Host
         $SMINumber = Read-Host -Prompt 'Please Enter the SMI Number: '
-        clear
+        Clear-Host
         $title    = ''
         $question = 'Is ' + $SMINumber + ' the correct SMI number?'
         $decision = $Host.UI.PromptForChoice($title, $question, $choices, 0)
@@ -117,12 +117,12 @@ if ($answer -eq 6) {
     } While ($loop)
 
     # Get PLC IP Address
-    clear
+    Clear-Host
     $loop = $true
     DO {
-        clear
+        Clear-Host
         $PLCIP = Read-Host -Prompt 'Please enter the PLC IP Address: '
-        clear
+        Clear-Host
         $title    = ''
         $question = 'Is ' + $PLCIP + ' the correct PLC IP Address?'
         $decision = $Host.UI.PromptForChoice($title, $question, $choices, 0)
@@ -132,12 +132,12 @@ if ($answer -eq 6) {
     } While ($loop)
 
     # Get Application Key
-    clear
+    Clear-Host
     $loop = $true
     DO {
-        clear
+        Clear-Host
         $applicationKey = Read-Host -Prompt 'Please enter the application key: '
-        clear
+        Clear-Host
         $title    = ''
         $question = 'Is ' + $applicationKey + ' the correct application key?'
         $decision = $Host.UI.PromptForChoice($title, $question, $choices, 0)
@@ -147,12 +147,12 @@ if ($answer -eq 6) {
     } While ($loop)
 
     # Select Production or Development Server
-    clear
+    Clear-Host
     $loop = $true
     $serverDownload = 'https://sanimatic-dev.cloud.thingworx.com/Thingworx/FileRepositories/Downloads/microserver.zip?appKey=9f09c4f6-14f6-44b7-b90d-73a7e2f0e6ef'
     $server = 'sanimatic-dev.cloud.thingworx.com'
     DO {
-        clear
+        Clear-Host
         $title    = ''
         $question = 'Is this for the production server?'
         $decision = $Host.UI.PromptForChoice($title, $question, $choices, 0)
@@ -171,7 +171,7 @@ if ($answer -eq 6) {
     [String]$SaniTrendFolder = "$location\SaniTrendCloud_Lite-main"
 
     # Change directory to respository folder
-    cd SaniTrendCloud_Lite-main
+    Set-Location $SaniTrendFolder
 
     # Download edge microserver
     DownloadMicroServer -Location $pwd
@@ -202,7 +202,7 @@ if ($answer -eq 6) {
     [String]$configPath = "$pwd\microserver\etc\config.json"
     [String]$binPath = """$pwd\microserver\wsems.exe"" -service -cfg ""$configPath"""
     $service = Get-Service -Name $WSEMS_NAME -ErrorAction SilentlyContinue
-    if($service -ne $null)
+    if($null -ne $service)
     {
         sc.exe delete + $WSEMS_NAME
     }

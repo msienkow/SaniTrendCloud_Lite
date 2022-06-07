@@ -130,6 +130,7 @@ rm sanitrend.service
 rm ssh.sh
 rm sudoers.sh
 rm install.sh
+rm SaniTrendCloud.ps1
 
 # End of Script
 echo "\n\n\n***********************************************"
