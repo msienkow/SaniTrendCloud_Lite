@@ -1,10 +1,8 @@
 import platform
 import json
-from pycomm3.exceptions import CommError
 import threading
 import time
 from datetime import datetime
-from requests.models import HTTPError
 import requests
 import os
 import math
