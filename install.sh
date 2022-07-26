@@ -131,6 +131,7 @@ rm ssh.sh
 rm sudoers.sh
 rm install.sh
 rm SaniTrendCloud.ps1
+rm -rf STC_Lite_Win
 
 # End of Script
 echo "\n\n\n***********************************************"
