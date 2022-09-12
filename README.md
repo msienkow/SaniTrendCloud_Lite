@@ -1,4 +1,4 @@
-# SaniTrendCloud_Lite
+# SaniTrendCloud Lite
 SaniTrend™ Cloud Lite
 
 This project contains python scripts for communication with Allen-Bradley PLC's and PTC Thingworx. Intended for use in Rapsberry Pi devices.
