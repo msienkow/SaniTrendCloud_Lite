@@ -52,6 +52,8 @@ def main():
             # Send in-memory data to Thingworx
             if len(SaniTrend.TwxDataRows) > 0:
                 SaniTrend.SendDataToTwx()
+
+            time.sleep(0.1)
                    
         except CommError:
             PLCErrorCount += 1
