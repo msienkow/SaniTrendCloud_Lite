@@ -65,7 +65,34 @@ sudo apt update && sudo apt upgrade -y
 
 # Install Prerequisite Programs
 echo "\n\n\nInstalling Prerequisite programs..."
-sudo apt install -y git curl wget zip unzip python3 python3-pip sqlite3
+sudo apt install -y git curl wget zip unzip python3 python3-pip sqlite3 neofetch htop
+sudo snap install --edge starship
+
+# Setup Firewall
+echo "\n\n\nSetting up firewall..."
+sudo ufw default allow outgoing
+sudo ufw default deny incoming
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw allow mysql
+sudo ufw allow 3000
+sudo ufw allow 8000
+sudo ufw allow 44818
+sudo ufw route allow proto tcp from any to any port http
+sudo ufw route allow proto tcp from any to any port https
+sudo ufw route allow proto tcp from any to any port mysql
+sudo ufw route allow proto tcp from any to any port 3000
+sudo ufw route allow proto tcp from any to any port 8000
+sudo ufw route allow proto tcp from any to any port 44818
+sudo ufw route allow proto udp from any to any port 44818
+sudo ufw limit ssh
+sudo ufw enable
+sudo ufw reload
+
+# Setup Unattended Upgrades
+sudo touch /etc/cloud/cloud-init.disabled
+sudo dpkg-reconfigure -plow unattended-upgrades
 
 # Clone SaniTrend Cloud github repository
 echo "\n\n\nDownloading SaniTrend Cloud Repository..."
